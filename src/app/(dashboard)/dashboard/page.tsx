@@ -342,7 +342,7 @@ export default function DashboardPage() {
               <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white/30 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-[#2D5016]" />
               </div>
-              <span className="text-[#2D5016] font-bold text-sm sm:text-base">Marketplace</span>
+              <span className="text-[#2D5016] font-bold text-sm sm:text-base">Shop</span>
             </CardContent>
           </Card>
         </Link>

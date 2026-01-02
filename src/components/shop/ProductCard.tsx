@@ -11,7 +11,7 @@ export interface Product {
   price: number;
   image: string;
   condition: "Neuf" | "Très bon" | "Bon" | "Satisfaisant";
-  subject: string;
+  category: string;
   seller: {
     name: string;
     avatar?: string;
@@ -53,16 +53,16 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
       
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <div>
+          <div className="flex-1 min-w-0">
             <span className="text-xs font-medium text-accent-blue uppercase tracking-wider">
-              {product.subject}
+              {product.category}
             </span>
-            <h3 className="font-hagrid text-lg font-bold leading-tight mt-1 line-clamp-2">
+            <h3 className="font-hagrid text-base font-bold leading-tight mt-1 line-clamp-2">
               {product.title}
             </h3>
           </div>
-          <span className="font-hagrid text-xl font-bold text-accent-green whitespace-nowrap">
-            {product.price}€
+          <span className="font-bold text-[#2D5016] whitespace-nowrap text-sm">
+            {product.price.toLocaleString()} FCFA
           </span>
         </div>
         

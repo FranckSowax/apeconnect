@@ -2,173 +2,323 @@
 
 import { useState } from "react";
 import { ProductCard, Product } from "@/components/shop/ProductCard";
-import { ShopFilters } from "@/components/shop/ShopFilters";
 import { ProductDetailsSheet } from "@/components/shop/ProductDetailsSheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, SlidersHorizontal } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Search,
+  Plus,
+  SlidersHorizontal,
+  BookOpen,
+  Shirt,
+  GraduationCap,
+  Backpack,
+  Pencil,
+  MoreHorizontal,
+  TrendingUp,
+  ChevronDown,
+} from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Link from "next/link";
 
-// Dummy data for high-fidelity UI demonstration
+// Categories avec icônes
+const CATEGORIES = [
+  { id: "all", label: "Tout", icon: MoreHorizontal, color: "bg-secondary" },
+  { id: "manuels", label: "Manuels", icon: BookOpen, color: "bg-[#2D5016]/10" },
+  { id: "uniformes", label: "Uniformes", icon: Shirt, color: "bg-[#F7D66E]/20" },
+  { id: "toges", label: "Toges", icon: GraduationCap, color: "bg-[#FFB2DD]/20" },
+  { id: "sacs", label: "Sacs", icon: Backpack, color: "bg-[#B6CAEB]/20" },
+  { id: "fournitures", label: "Fournitures", icon: Pencil, color: "bg-[#9AAB65]/20" },
+];
+
+// Dummy data avec catégories variées et prix en FCFA
 const DUMMY_PRODUCTS: Product[] = [
   {
     id: "1",
     title: "Manuel de Mathématiques 6ème - Collection Phare",
-    price: 15,
+    price: 7500,
     image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000&auto=format&fit=crop",
     condition: "Très bon",
-    subject: "Mathématiques",
-    seller: {
-      name: "Sophie M.",
-      avatar: "",
-    },
+    category: "Manuels",
+    seller: { name: "Sophie M.", avatar: "" },
   },
   {
     id: "2",
-    title: "Histoire-Géographie 4ème - Magnard",
-    price: 12,
-    image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1000&auto=format&fit=crop",
-    condition: "Bon",
-    subject: "Histoire-Géo",
-    seller: {
-      name: "Thomas L.",
-      avatar: "",
-    },
+    title: "Uniforme Scolaire Complet - Taille M",
+    price: 15000,
+    image: "https://images.unsplash.com/photo-1604671801908-6f0c6a092c05?q=80&w=1000&auto=format&fit=crop",
+    condition: "Neuf",
+    category: "Uniformes",
+    seller: { name: "Thomas L.", avatar: "" },
   },
   {
     id: "3",
-    title: "English for Everyone - Level 2",
-    price: 18,
-    image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1000&auto=format&fit=crop",
-    condition: "Neuf",
-    subject: "Langues",
-    seller: {
-      name: "Marie D.",
-      avatar: "",
-    },
+    title: "Toge de Cérémonie Bleue - Terminale",
+    price: 25000,
+    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1000&auto=format&fit=crop",
+    condition: "Très bon",
+    category: "Toges",
+    seller: { name: "Marie D.", avatar: "" },
   },
   {
     id: "4",
-    title: "SVT Cycle 4 - Bordas",
-    price: 14,
-    image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1000&auto=format&fit=crop",
-    condition: "Satisfaisant",
-    subject: "Sciences",
-    seller: {
-      name: "Lucas P.",
-      avatar: "",
-    },
+    title: "Sac à dos scolaire - Grande capacité",
+    price: 12000,
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1000&auto=format&fit=crop",
+    condition: "Bon",
+    category: "Sacs",
+    seller: { name: "Lucas P.", avatar: "" },
   },
   {
     id: "5",
-    title: "Français 3ème - Fleurs d'encre",
-    price: 16,
-    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1000&auto=format&fit=crop",
-    condition: "Très bon",
-    subject: "Français",
-    seller: {
-      name: "Camille B.",
-      avatar: "",
-    },
+    title: "Histoire-Géographie 4ème - Magnard",
+    price: 6000,
+    image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1000&auto=format&fit=crop",
+    condition: "Bon",
+    category: "Manuels",
+    seller: { name: "Camille B.", avatar: "" },
   },
   {
     id: "6",
-    title: "Physique-Chimie 5ème - Hachette",
-    price: 13,
-    image: "https://images.unsplash.com/photo-1629196914375-f7e48f477b6d?q=80&w=1000&auto=format&fit=crop",
+    title: "Kit Fournitures Complet - Rentrée",
+    price: 8500,
+    image: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=80&w=1000&auto=format&fit=crop",
+    condition: "Neuf",
+    category: "Fournitures",
+    seller: { name: "Antoine R.", avatar: "" },
+  },
+  {
+    id: "7",
+    title: "Chemise Blanche Uniforme - Taille L",
+    price: 5000,
+    image: "https://images.unsplash.com/photo-1598032895397-b9472444bf93?q=80&w=1000&auto=format&fit=crop",
+    condition: "Très bon",
+    category: "Uniformes",
+    seller: { name: "Emma T.", avatar: "" },
+  },
+  {
+    id: "8",
+    title: "Physique-Chimie Terminale S",
+    price: 9000,
+    image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1000&auto=format&fit=crop",
     condition: "Bon",
-    subject: "Sciences",
-    seller: {
-      name: "Antoine R.",
-      avatar: "",
-    },
+    category: "Manuels",
+    seller: { name: "Paul M.", avatar: "" },
   },
 ];
 
 export default function ShopPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredProducts = DUMMY_PRODUCTS.filter((product) => {
+    const matchesCategory = activeCategory === "all" || product.category.toLowerCase() === activeCategory;
+    const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="font-hagrid text-3xl md:text-4xl font-bold text-foreground">
-            Le Marketplace
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Achetez et vendez vos manuels scolaires entre parents
-          </p>
-        </div>
-        <Button className="rounded-full bg-accent-yellow text-primary hover:bg-accent-yellow/90 font-medium px-6 h-12 shadow-md">
-          <Plus className="mr-2 h-5 w-5" />
-          Déposer une annonce
+    <div className="space-y-6 pb-8">
+      {/* Stats Cards Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Card className="bg-white border-0 shadow-sm rounded-3xl overflow-hidden">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground font-medium mb-1">Annonces actives</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-foreground">156</span>
+                  <Badge className="bg-[#2D5016]/10 text-[#2D5016] border-0 rounded-full text-xs">
+                    +12%
+                  </Badge>
+                </div>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-[#F7D66E]/20 flex items-center justify-center">
+                <BookOpen className="h-6 w-6 text-[#F7D66E]" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white border-0 shadow-sm rounded-3xl overflow-hidden">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground font-medium mb-1">Ventes ce mois</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-foreground">48</span>
+                  <Badge className="bg-[#2D5016]/10 text-[#2D5016] border-0 rounded-full text-xs">
+                    +8%
+                  </Badge>
+                </div>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-[#2D5016]/10 flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-[#2D5016]" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-[#2D5016] to-[#4A7C23] border-0 shadow-sm rounded-3xl overflow-hidden sm:col-span-2 lg:col-span-1">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-white/80 font-medium mb-1">Publier une annonce</p>
+                <p className="text-white font-bold">Vendez vos articles</p>
+              </div>
+              <Link href="/shop/new">
+                <Button size="icon" className="h-12 w-12 rounded-full bg-white/20 hover:bg-white/30 text-white">
+                  <Plus className="h-6 w-6" />
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Search Bar */}
+      <Card className="bg-white border-0 shadow-sm rounded-3xl overflow-hidden">
+        <CardContent className="p-4">
+          <div className="flex gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Rechercher un article..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-12 h-12 rounded-2xl border-0 bg-secondary/30 text-base focus:bg-secondary/50 transition-colors"
+              />
+            </div>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-0 bg-secondary/30 hover:bg-secondary/50">
+                  <SlidersHorizontal className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-80">
+                <div className="space-y-6 mt-6">
+                  <h3 className="font-bold text-lg">Filtres</h3>
+
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium text-muted-foreground">Prix</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <Button variant="outline" size="sm" className="rounded-full">0 - 5000 FCFA</Button>
+                      <Button variant="outline" size="sm" className="rounded-full">5000 - 15000 FCFA</Button>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <Button variant="outline" size="sm" className="rounded-full">15000 - 30000 FCFA</Button>
+                      <Button variant="outline" size="sm" className="rounded-full">30000+ FCFA</Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium text-muted-foreground">État</p>
+                    <div className="flex flex-wrap gap-2">
+                      {["Neuf", "Très bon", "Bon", "Satisfaisant"].map((condition) => (
+                        <Button key={condition} variant="outline" size="sm" className="rounded-full">
+                          {condition}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button className="w-full rounded-full bg-[#2D5016] hover:bg-[#4A7C23]">
+                    Appliquer les filtres
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Categories */}
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        {CATEGORIES.map((category) => {
+          const Icon = category.icon;
+          const isActive = activeCategory === category.id;
+          return (
+            <button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-medium text-sm whitespace-nowrap transition-all ${
+                isActive
+                  ? "bg-foreground text-white shadow-md"
+                  : "bg-white text-muted-foreground hover:bg-secondary/50 shadow-sm"
+              }`}
+            >
+              <Icon className="h-4 w-4" />
+              {category.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Results Header */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-bold text-foreground">{filteredProducts.length}</span> articles trouvés
+        </p>
+        <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground gap-1">
+          Trier par <ChevronDown className="h-4 w-4" />
         </Button>
       </div>
 
-      {/* Mobile Search & Filter Trigger */}
-      <div className="md:hidden flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Rechercher un livre..."
-            className="pl-10 rounded-full border-0 bg-white shadow-sm"
+      {/* Product Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {filteredProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onClick={() => setSelectedProduct(product)}
           />
-        </div>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="rounded-full bg-white shadow-sm border-0">
-              <SlidersHorizontal className="h-4 w-4" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left">
-            <ShopFilters />
-          </SheetContent>
-        </Sheet>
+        ))}
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Sidebar Filters (Desktop) */}
-        <aside className="hidden md:block md:col-span-3 lg:col-span-3">
-          <div className="sticky top-24">
-            <ShopFilters />
-          </div>
-        </aside>
-
-        {/* Product Grid */}
-        <div className="col-span-1 md:col-span-9 lg:col-span-9">
-          {/* Desktop Search Bar */}
-          <div className="hidden md:flex mb-6 relative">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Rechercher par titre, matière, ISBN..."
-              className="pl-12 h-14 rounded-full border-0 bg-white shadow-sm text-lg"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-            {DUMMY_PRODUCTS.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onClick={() => setSelectedProduct(product)}
-              />
-            ))}
-          </div>
-          
-          <div className="mt-12 flex justify-center">
-            <Button variant="outline" className="rounded-full px-8 h-12 border-2 hover:bg-accent-blue/10 hover:border-accent-blue hover:text-accent-blue font-medium">
-              Charger plus d'annonces
+      {/* Empty State */}
+      {filteredProducts.length === 0 && (
+        <Card className="bg-white border-0 shadow-sm rounded-3xl">
+          <CardContent className="p-12 text-center">
+            <div className="h-16 w-16 rounded-full bg-secondary/50 flex items-center justify-center mx-auto mb-4">
+              <Search className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h3 className="font-bold text-lg mb-2">Aucun article trouvé</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Essayez de modifier vos critères de recherche
+            </p>
+            <Button
+              variant="outline"
+              className="rounded-full"
+              onClick={() => {
+                setActiveCategory("all");
+                setSearchQuery("");
+              }}
+            >
+              Réinitialiser les filtres
             </Button>
-          </div>
-        </div>
-      </div>
+          </CardContent>
+        </Card>
+      )}
 
-      <ProductDetailsSheet 
-        product={selectedProduct} 
-        isOpen={!!selectedProduct} 
-        onClose={() => setSelectedProduct(null)} 
+      {/* Load More */}
+      {filteredProducts.length > 0 && (
+        <div className="flex justify-center pt-4">
+          <Button
+            variant="outline"
+            className="rounded-full px-8 h-12 border-2 hover:bg-[#2D5016]/10 hover:border-[#2D5016] hover:text-[#2D5016] font-medium"
+          >
+            Charger plus d&apos;articles
+          </Button>
+        </div>
+      )}
+
+      <ProductDetailsSheet
+        product={selectedProduct}
+        isOpen={!!selectedProduct}
+        onClose={() => setSelectedProduct(null)}
       />
     </div>
   );

@@ -30,7 +30,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    title: "Marketplace",
+    title: "Shop",
     href: "/shop",
     icon: Store,
     color: "text-accent-yellow", // Yellow

@@ -52,16 +52,16 @@ export function ProductDetailsSheet({ product, isOpen, onClose }: ProductDetails
         <div className="p-6 space-y-6">
           {/* Header Info */}
           <div className="space-y-4">
-            <div className="flex items-start justify-between">
-              <div>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
                 <Badge variant="outline" className="mb-2 border-accent-blue text-accent-blue bg-accent-blue/10">
-                  {product.subject}
+                  {product.category}
                 </Badge>
                 <h2 className="font-hagrid text-2xl font-bold leading-tight">{product.title}</h2>
               </div>
-              <div className="text-right">
-                <span className="block font-hagrid text-3xl font-bold text-accent-green">
-                  {product.price}€
+              <div className="text-right flex-shrink-0">
+                <span className="block font-bold text-2xl text-[#2D5016]">
+                  {product.price.toLocaleString()} FCFA
                 </span>
                 <span className="text-sm text-muted-foreground">Prix ferme</span>
               </div>
