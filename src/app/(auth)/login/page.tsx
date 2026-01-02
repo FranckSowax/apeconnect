@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Loader2, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -62,28 +62,28 @@ function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-md border-border/50 shadow-lg bg-white/80 backdrop-blur-sm">
-      <CardHeader className="space-y-1 text-center">
-        <div className="mx-auto h-16 w-16 rounded-full bg-accent-yellow flex items-center justify-center mb-6 shadow-sm">
-          <span className="text-primary font-bold text-2xl font-hagrid">A</span>
+    <Card className="w-full max-w-md border-border/50 shadow-lg bg-white/80 backdrop-blur-sm mx-4 sm:mx-0">
+      <CardHeader className="space-y-1 text-center px-4 sm:px-6 pt-6 sm:pt-8">
+        <div className="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-[#2D5016] flex items-center justify-center mb-4 sm:mb-6 shadow-sm">
+          <span className="text-white font-bold text-xl sm:text-2xl">A</span>
         </div>
-        <CardTitle className="text-3xl font-hagrid font-bold">Connexion</CardTitle>
-        <CardDescription className="text-base">
-          Connectez-vous à votre compte APE+
+        <CardTitle className="text-2xl sm:text-3xl font-bold">Connexion</CardTitle>
+        <CardDescription className="text-sm sm:text-base">
+          Connectez-vous à votre compte APE Connect
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <Button
             variant="outline"
-            className="rounded-full h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-accent-blue/50 transition-all"
+            className="rounded-full h-10 sm:h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-[#2D5016]/50 transition-all text-sm sm:text-base"
             onClick={() => handleOAuth("google")}
             disabled={isOAuthLoading !== null}
           >
             {isOAuthLoading === "google" ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              <Loader2 className="h-4 w-4 animate-spin mr-1.5 sm:mr-2" />
             ) : (
-              <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24">
+              <svg className="h-4 w-4 mr-1.5 sm:mr-2 flex-shrink-0" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                   fill="#4285F4"
@@ -102,22 +102,22 @@ function LoginForm() {
                 />
               </svg>
             )}
-            Google
+            <span className="truncate">Google</span>
           </Button>
           <Button
             variant="outline"
-            className="rounded-full h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-accent-pink/50 transition-all"
+            className="rounded-full h-10 sm:h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-[#2D5016]/50 transition-all text-sm sm:text-base"
             onClick={() => handleOAuth("apple")}
             disabled={isOAuthLoading !== null}
           >
             {isOAuthLoading === "apple" ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              <Loader2 className="h-4 w-4 animate-spin mr-1.5 sm:mr-2" />
             ) : (
-              <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="h-4 w-4 mr-1.5 sm:mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/>
               </svg>
             )}
-            Apple
+            <span className="truncate">Apple</span>
           </Button>
         </div>
 
@@ -126,55 +126,55 @@ function LoginForm() {
             <Separator className="w-full bg-border/50" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-muted-foreground font-medium">
+            <span className="bg-white px-2 text-muted-foreground font-medium text-[10px] sm:text-xs">
               Ou continuez avec email
             </span>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="email" className="text-sm">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-4 top-3 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute left-3 sm:left-4 top-2.5 sm:top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
                 placeholder="nom@exemple.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-11 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
+                className="pl-9 sm:pl-11 h-10 sm:h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors text-sm sm:text-base rounded-xl sm:rounded-2xl"
                 required
                 disabled={isLoading}
               />
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5 sm:space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password" className="text-sm">Mot de passe</Label>
               <Link
                 href="/forgot-password"
-                className="text-sm text-accent-blue hover:underline font-medium"
+                className="text-xs sm:text-sm text-[#2D5016] hover:underline font-medium"
               >
                 Oublié ?
               </Link>
             </div>
             <div className="relative">
-              <Lock className="absolute left-4 top-3 h-4 w-4 text-muted-foreground" />
+              <Lock className="absolute left-3 sm:left-4 top-2.5 sm:top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-11 pr-11 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
+                className="pl-9 sm:pl-11 pr-9 sm:pr-11 h-10 sm:h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors text-sm sm:text-base rounded-xl sm:rounded-2xl"
                 required
                 disabled={isLoading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-3 text-muted-foreground hover:text-foreground"
+                className="absolute right-3 sm:right-4 top-2.5 sm:top-3 text-muted-foreground hover:text-foreground p-0.5"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -184,19 +184,27 @@ function LoginForm() {
               </button>
             </div>
           </div>
-          <Button type="submit" className="w-full h-12 text-lg font-bold shadow-md hover:shadow-lg transition-all" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full h-10 sm:h-12 text-sm sm:text-lg font-bold shadow-md hover:shadow-lg transition-all bg-[#2D5016] hover:bg-[#4A7C23] rounded-full"
+            disabled={isLoading}
+          >
             {isLoading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
             Se connecter
           </Button>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-center pb-8">
-        <p className="text-sm text-muted-foreground">
+      <CardFooter className="flex flex-col gap-4 pb-6 sm:pb-8 px-4 sm:px-6">
+        <p className="text-xs sm:text-sm text-muted-foreground text-center">
           Pas encore de compte ?{" "}
-          <Link href="/register" className="text-accent-blue font-bold hover:underline">
+          <Link href="/register" className="text-[#2D5016] font-bold hover:underline">
             S&apos;inscrire
           </Link>
         </p>
+        <Link href="/" className="flex items-center justify-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-[#2D5016] transition-colors">
+          <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+          Retour à l&apos;accueil
+        </Link>
       </CardFooter>
     </Card>
   );
@@ -204,22 +212,22 @@ function LoginForm() {
 
 function LoginFormSkeleton() {
   return (
-    <Card className="w-full max-w-md border-border/50 shadow-lg bg-white/80">
-      <CardHeader className="space-y-1 text-center">
-        <Skeleton className="mx-auto h-16 w-16 rounded-full mb-6" />
-        <Skeleton className="h-8 w-32 mx-auto" />
-        <Skeleton className="h-4 w-48 mx-auto" />
+    <Card className="w-full max-w-md border-border/50 shadow-lg bg-white/80 mx-4 sm:mx-0">
+      <CardHeader className="space-y-1 text-center px-4 sm:px-6">
+        <Skeleton className="mx-auto h-12 w-12 sm:h-16 sm:w-16 rounded-full mb-4 sm:mb-6" />
+        <Skeleton className="h-6 sm:h-8 w-24 sm:w-32 mx-auto" />
+        <Skeleton className="h-4 w-40 sm:w-48 mx-auto" />
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          <Skeleton className="h-12 w-full rounded-full" />
-          <Skeleton className="h-12 w-full rounded-full" />
+      <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <Skeleton className="h-10 sm:h-12 w-full rounded-full" />
+          <Skeleton className="h-10 sm:h-12 w-full rounded-full" />
         </div>
         <Skeleton className="h-4 w-full" />
-        <div className="space-y-4">
-          <Skeleton className="h-12 w-full rounded-2xl" />
-          <Skeleton className="h-12 w-full rounded-2xl" />
-          <Skeleton className="h-12 w-full rounded-full" />
+        <div className="space-y-3 sm:space-y-4">
+          <Skeleton className="h-10 sm:h-12 w-full rounded-xl sm:rounded-2xl" />
+          <Skeleton className="h-10 sm:h-12 w-full rounded-xl sm:rounded-2xl" />
+          <Skeleton className="h-10 sm:h-12 w-full rounded-full" />
         </div>
       </CardContent>
     </Card>
@@ -228,7 +236,7 @@ function LoginFormSkeleton() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8F3E7] p-4 bg-[radial-gradient(#E6E1D6_1px,transparent_1px)] [background-size:20px_20px]">
+    <div className="min-h-screen min-h-[100dvh] flex items-center justify-center bg-[#FDFBF7] p-4 sm:p-6 bg-[radial-gradient(#E6E1D6_1px,transparent_1px)] [background-size:16px_16px] sm:[background-size:20px_20px]">
       <Suspense fallback={<LoginFormSkeleton />}>
         <LoginForm />
       </Suspense>
