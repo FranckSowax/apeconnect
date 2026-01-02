@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
 
       if (session?.user) {
-        await fetchUserProfile(session.user.id);
+        await fetchUserProfile(session.user.id, session.user);
       }
       setLoading(false);
     };
@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
 
         if (session?.user) {
-          await fetchUserProfile(session.user.id);
+          await fetchUserProfile(session.user.id, session.user);
         } else {
           setUser(null);
         }
@@ -61,22 +61,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const fetchUserProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("users")
-      .select(`
-        *,
-        establishment:establishments(*)
-      `)
-      .eq("id", userId)
-      .single();
+  const fetchUserProfile = async (userId: string, supabaseUser?: SupabaseUser) => {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select(`
+          *,
+          establishment:establishments(*)
+        `)
+        .eq("id", userId)
+        .single();
 
-    if (error) {
-      console.error("Error fetching user profile:", error);
-      return;
+      if (error) {
+        console.error("Error fetching user profile:", error);
+        // If user doesn't exist in users table but has auth session, create minimal user object
+        if (supabaseUser) {
+          const fallbackUser: User = {
+            id: userId,
+            email: supabaseUser.email || "",
+            full_name: supabaseUser.user_metadata?.full_name || null,
+            avatar_url: null,
+            phone: supabaseUser.user_metadata?.phone || null,
+            phone_verified: false,
+            role: (supabaseUser.user_metadata?.role as UserRole) || "parent",
+            establishment_id: supabaseUser.user_metadata?.establishment_id || null,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          setUser(fallbackUser);
+        } else {
+          setUser(null);
+        }
+        return;
+      }
+
+      setUser(data as User);
+    } catch (err) {
+      console.error("Error in fetchUserProfile:", err);
+      setUser(null);
     }
-
-    setUser(data as User);
   };
 
   const signIn = async (email: string, password: string) => {
