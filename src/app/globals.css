@@ -8,14 +8,17 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  
+
   --font-hagrid: var(--font-hagrid);
   --font-sf-pro: var(--font-sf-pro);
 
   --color-accent-yellow: var(--accent-yellow);
   --color-accent-green: var(--accent-green);
+  --color-accent-green-light: var(--accent-green-light);
   --color-accent-blue: var(--accent-blue);
   --color-accent-pink: var(--accent-pink);
+  --color-accent-olive: var(--accent-olive);
+  --color-bg-cream: var(--bg-cream);
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -54,14 +57,25 @@
 
 :root {
   --radius: 1.5rem; /* 24px */
-  
-  /* Palette */
-  --color-bg-base: #F8F3E7;
-  --color-text-base: #2D2D2B;
+
+  /* Palette - CostFixers inspired green/beige */
+  --color-bg-base: #FDFBF7;
+  --color-bg-cream: #F5F1E8;
+  --color-text-base: #1A3D1A;
   --color-accent-yellow: #F7D66E;
-  --color-accent-green: #9AAB65;
+  --color-accent-green: #2D5016;
+  --color-accent-green-light: #4A7C23;
   --color-accent-blue: #B6CAEB;
   --color-accent-pink: #FFB2DD;
+  --color-accent-olive: #9AAB65;
+
+  --accent-yellow: #F7D66E;
+  --accent-green: #2D5016;
+  --accent-green-light: #4A7C23;
+  --accent-blue: #B6CAEB;
+  --accent-pink: #FFB2DD;
+  --accent-olive: #9AAB65;
+  --bg-cream: #F5F1E8;
 
   --background: var(--color-bg-base);
   --foreground: var(--color-text-base);
@@ -72,10 +86,10 @@
   --popover: #FFFFFF;
   --popover-foreground: var(--color-text-base);
 
-  --primary: var(--color-text-base);
+  --primary: var(--color-accent-green);
   --primary-foreground: #FFFFFF;
 
-  --secondary: var(--color-accent-yellow);
+  --secondary: var(--color-bg-cream);
   --secondary-foreground: var(--color-text-base);
 
   --muted: #EDE8DB; /* Slightly darker than background */

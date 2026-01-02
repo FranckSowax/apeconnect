@@ -6,18 +6,18 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { createClient } from "@/lib/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Clock,
-  CheckCircle,
-  XCircle,
+  CheckCircle2,
   MessageSquare,
   BookOpen,
   Users,
   TrendingUp,
   ArrowRight,
+  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -66,10 +66,10 @@ export default function AdminDashboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-10 w-64" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Skeleton className="h-12 w-64 rounded-full" />
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-32" />
+            <Skeleton key={i} className="h-40 rounded-3xl" />
           ))}
         </div>
       </div>
@@ -77,71 +77,84 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Administration</h1>
-        <p className="text-muted-foreground">
-          Tableau de bord administrateur
-        </p>
+    <div className="space-y-8">
+      <div className="flex items-center gap-3">
+        <div className="h-12 w-12 rounded-full bg-accent-pink/20 flex items-center justify-center">
+          <ShieldAlert className="h-6 w-6 text-accent-pink" />
+        </div>
+        <div>
+          <h1 className="text-3xl font-hagrid font-bold text-foreground">Administration</h1>
+          <p className="text-muted-foreground">
+            Vue d'ensemble et gestion de l'établissement
+          </p>
+        </div>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="border-border/50 bg-white hover:shadow-md transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Absences en attente
             </CardTitle>
-            <Clock className="h-4 w-4 text-yellow-500" />
+            <div className="h-8 w-8 rounded-full bg-accent-yellow/20 flex items-center justify-center">
+              <Clock className="h-4 w-4 text-accent-yellow" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.pendingAbsences}</div>
-            <p className="text-xs text-muted-foreground">
-              A traiter aujourd&apos;hui
+            <div className="text-3xl font-hagrid font-bold">{stats?.pendingAbsences}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
+              À traiter aujourd&apos;hui
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 bg-white hover:shadow-md transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Annonces en attente
             </CardTitle>
-            <BookOpen className="h-4 w-4 text-blue-500" />
+            <div className="h-8 w-8 rounded-full bg-accent-blue/20 flex items-center justify-center">
+              <BookOpen className="h-4 w-4 text-accent-blue" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.pendingAds}</div>
-            <p className="text-xs text-muted-foreground">
-              A moderer
+            <div className="text-3xl font-hagrid font-bold">{stats?.pendingAds}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
+              À modérer
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 bg-white hover:shadow-md transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Utilisateurs
             </CardTitle>
-            <Users className="h-4 w-4 text-green-500" />
+            <div className="h-8 w-8 rounded-full bg-accent-green/20 flex items-center justify-center">
+              <Users className="h-4 w-4 text-accent-green" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-hagrid font-bold">{stats?.totalUsers}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
               Inscrits sur la plateforme
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 bg-white hover:shadow-md transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Messages WhatsApp
             </CardTitle>
-            <MessageSquare className="h-4 w-4 text-primary" />
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <MessageSquare className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.messageVolume}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-3xl font-hagrid font-bold">{stats?.messageVolume}</div>
+            <p className="text-xs text-muted-foreground mt-1 font-medium">
               Aujourd&apos;hui
             </p>
           </CardContent>
@@ -150,121 +163,121 @@ export default function AdminDashboardPage() {
 
       {/* Quick Actions */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="hover:shadow-md transition-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-yellow-500" />
-              Absences en attente
-            </CardTitle>
-            <CardDescription>
-              {stats?.pendingAbsences} demande(s) a traiter
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild className="w-full">
-              <Link href="/admin/absences">
-                Gerer les absences
+        <Link href="/admin/absences" className="group">
+          <Card className="h-full border-border/50 bg-white hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 font-hagrid text-lg">
+                <Clock className="h-5 w-5 text-accent-yellow" />
+                Gestion Absences
+              </CardTitle>
+              <CardDescription>
+                {stats?.pendingAbsences} demande(s) en attente de validation
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full rounded-full bg-accent-yellow text-primary hover:bg-accent-yellow/90 font-bold group-hover:shadow-md transition-all">
+                Gérer les absences
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+              </Button>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="hover:shadow-md transition-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-blue-500" />
-              Annonces a moderer
-            </CardTitle>
-            <CardDescription>
-              {stats?.pendingAds} annonce(s) en attente
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild className="w-full">
-              <Link href="/admin/ads">
-                Moderer les annonces
+        <Link href="/admin/ads" className="group">
+          <Card className="h-full border-border/50 bg-white hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 font-hagrid text-lg">
+                <BookOpen className="h-5 w-5 text-accent-blue" />
+                Modération Shop
+              </CardTitle>
+              <CardDescription>
+                {stats?.pendingAds} annonce(s) à vérifier
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full rounded-full bg-accent-blue text-primary hover:bg-accent-blue/90 font-bold group-hover:shadow-md transition-all">
+                Modérer les annonces
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+              </Button>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="hover:shadow-md transition-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              Statistiques
-            </CardTitle>
-            <CardDescription>
-              Visualisez les metriques de la plateforme
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/admin/stats">
-                Voir les statistiques
+        <Link href="/admin/stats" className="group">
+          <Card className="h-full border-border/50 bg-white hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 font-hagrid text-lg">
+                <TrendingUp className="h-5 w-5 text-accent-green" />
+                Statistiques
+              </CardTitle>
+              <CardDescription>
+                Analyse détaillée de l'activité
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="outline" className="w-full rounded-full border-2 group-hover:bg-accent-green/10 group-hover:text-accent-green group-hover:border-accent-green transition-all font-bold">
+                Voir le rapport
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+              </Button>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* Activity Summary */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="border-border/50 bg-white">
           <CardHeader>
-            <CardTitle>Resume des absences</CardTitle>
-            <CardDescription>Ce mois-ci</CardDescription>
+            <CardTitle className="font-hagrid text-xl">Résumé des absences</CardTitle>
+            <CardDescription>Performance du mois en cours</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-green-500" />
-                  <span className="text-sm">Approuvees</span>
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-secondary/10">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-accent-green shadow-[0_0_8px_rgba(154,171,101,0.5)]" />
+                  <span className="font-medium">Approuvées</span>
                 </div>
-                <span className="font-medium">{stats?.approvedAbsences}</span>
+                <span className="font-bold font-hagrid text-lg">{stats?.approvedAbsences}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-yellow-500" />
-                  <span className="text-sm">En attente</span>
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-secondary/10">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-accent-yellow shadow-[0_0_8px_rgba(247,214,110,0.5)]" />
+                  <span className="font-medium">En attente</span>
                 </div>
-                <span className="font-medium">{stats?.pendingAbsences}</span>
+                <span className="font-bold font-hagrid text-lg">{stats?.pendingAbsences}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-red-500" />
-                  <span className="text-sm">Refusees</span>
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-secondary/10">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-destructive shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                  <span className="font-medium">Refusées</span>
                 </div>
-                <span className="font-medium">{stats?.rejectedAbsences}</span>
+                <span className="font-bold font-hagrid text-lg">{stats?.rejectedAbsences}</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-border/50 bg-white">
           <CardHeader>
-            <CardTitle>Resume du Shop</CardTitle>
-            <CardDescription>Annonces actuelles</CardDescription>
+            <CardTitle className="font-hagrid text-xl">Résumé du Shop</CardTitle>
+            <CardDescription>État du marketplace</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-green-500" />
-                  <span className="text-sm">Publiees</span>
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-secondary/10">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-accent-green shadow-[0_0_8px_rgba(154,171,101,0.5)]" />
+                  <span className="font-medium">Publiées</span>
                 </div>
-                <span className="font-medium">{stats?.publishedAds}</span>
+                <span className="font-bold font-hagrid text-lg">{stats?.publishedAds}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-yellow-500" />
-                  <span className="text-sm">En revision</span>
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-secondary/10">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-accent-yellow shadow-[0_0_8px_rgba(247,214,110,0.5)]" />
+                  <span className="font-medium">En révision</span>
                 </div>
-                <span className="font-medium">{stats?.pendingAds}</span>
+                <span className="font-bold font-hagrid text-lg">{stats?.pendingAds}</span>
               </div>
             </div>
           </CardContent>

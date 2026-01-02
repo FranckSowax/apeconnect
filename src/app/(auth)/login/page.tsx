@@ -62,20 +62,21 @@ function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md border-border/50 shadow-lg bg-white/80 backdrop-blur-sm">
       <CardHeader className="space-y-1 text-center">
-        <div className="mx-auto h-12 w-12 rounded-lg bg-primary flex items-center justify-center mb-4">
-          <span className="text-primary-foreground font-bold text-xl">A</span>
+        <div className="mx-auto h-16 w-16 rounded-full bg-accent-yellow flex items-center justify-center mb-6 shadow-sm">
+          <span className="text-primary font-bold text-2xl font-hagrid">A</span>
         </div>
-        <CardTitle className="text-2xl">Connexion</CardTitle>
-        <CardDescription>
-          Connectez-vous a votre compte APE Connect
+        <CardTitle className="text-3xl font-hagrid font-bold">Connexion</CardTitle>
+        <CardDescription className="text-base">
+          Connectez-vous à votre compte APE+
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <Button
             variant="outline"
+            className="rounded-full h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-accent-blue/50 transition-all"
             onClick={() => handleOAuth("google")}
             disabled={isOAuthLoading !== null}
           >
@@ -105,6 +106,7 @@ function LoginForm() {
           </Button>
           <Button
             variant="outline"
+            className="rounded-full h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-accent-pink/50 transition-all"
             onClick={() => handleOAuth("apple")}
             disabled={isOAuthLoading !== null}
           >
@@ -121,11 +123,11 @@ function LoginForm() {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <Separator className="w-full" />
+            <Separator className="w-full bg-border/50" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
-              Ou continuez avec
+            <span className="bg-white px-2 text-muted-foreground font-medium">
+              Ou continuez avec email
             </span>
           </div>
         </div>
@@ -134,14 +136,14 @@ function LoginForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute left-4 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
                 placeholder="nom@exemple.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-11 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
                 required
                 disabled={isLoading}
               />
@@ -152,27 +154,27 @@ function LoginForm() {
               <Label htmlFor="password">Mot de passe</Label>
               <Link
                 href="/forgot-password"
-                className="text-sm text-primary hover:underline"
+                className="text-sm text-accent-blue hover:underline font-medium"
               >
-                Mot de passe oublie?
+                Oublié ?
               </Link>
             </div>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Lock className="absolute left-4 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10"
+                className="pl-11 pr-11 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
                 required
                 disabled={isLoading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                className="absolute right-4 top-3 text-muted-foreground hover:text-foreground"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -182,16 +184,16 @@ function LoginForm() {
               </button>
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full h-12 text-lg font-bold shadow-md hover:shadow-lg transition-all" disabled={isLoading}>
             {isLoading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
             Se connecter
           </Button>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-center">
+      <CardFooter className="flex justify-center pb-8">
         <p className="text-sm text-muted-foreground">
-          Pas encore de compte?{" "}
-          <Link href="/register" className="text-primary hover:underline">
+          Pas encore de compte ?{" "}
+          <Link href="/register" className="text-accent-blue font-bold hover:underline">
             S&apos;inscrire
           </Link>
         </p>
@@ -202,22 +204,22 @@ function LoginForm() {
 
 function LoginFormSkeleton() {
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md border-border/50 shadow-lg bg-white/80">
       <CardHeader className="space-y-1 text-center">
-        <Skeleton className="mx-auto h-12 w-12 rounded-lg mb-4" />
+        <Skeleton className="mx-auto h-16 w-16 rounded-full mb-6" />
         <Skeleton className="h-8 w-32 mx-auto" />
         <Skeleton className="h-4 w-48 mx-auto" />
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-12 w-full rounded-full" />
+          <Skeleton className="h-12 w-full rounded-full" />
         </div>
         <Skeleton className="h-4 w-full" />
         <div className="space-y-4">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-12 w-full rounded-2xl" />
+          <Skeleton className="h-12 w-full rounded-2xl" />
+          <Skeleton className="h-12 w-full rounded-full" />
         </div>
       </CardContent>
     </Card>
@@ -226,7 +228,7 @@ function LoginFormSkeleton() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F3E7] p-4 bg-[radial-gradient(#E6E1D6_1px,transparent_1px)] [background-size:20px_20px]">
       <Suspense fallback={<LoginFormSkeleton />}>
         <LoginForm />
       </Suspense>

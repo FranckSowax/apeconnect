@@ -101,21 +101,22 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F3E7] p-4 bg-[radial-gradient(#E6E1D6_1px,transparent_1px)] [background-size:20px_20px]">
+      <Card className="w-full max-w-md border-border/50 shadow-lg bg-white/80 backdrop-blur-sm my-8">
         <CardHeader className="space-y-1 text-center">
-          <div className="mx-auto h-12 w-12 rounded-lg bg-primary flex items-center justify-center mb-4">
-            <span className="text-primary-foreground font-bold text-xl">A</span>
+          <div className="mx-auto h-16 w-16 rounded-full bg-accent-green flex items-center justify-center mb-6 shadow-sm">
+            <span className="text-primary font-bold text-2xl font-hagrid">A</span>
           </div>
-          <CardTitle className="text-2xl">Creer un compte</CardTitle>
-          <CardDescription>
-            Inscrivez-vous pour acceder a APE Connect
+          <CardTitle className="text-3xl font-hagrid font-bold">Créer un compte</CardTitle>
+          <CardDescription className="text-base">
+            Rejoignez la communauté APE+ Connect
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <Button
               variant="outline"
+              className="rounded-full h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-accent-blue/50 transition-all"
               onClick={() => handleOAuth("google")}
               disabled={isOAuthLoading !== null}
             >
@@ -145,6 +146,7 @@ export default function RegisterPage() {
             </Button>
             <Button
               variant="outline"
+              className="rounded-full h-12 border-border/50 hover:bg-white hover:text-foreground hover:border-accent-pink/50 transition-all"
               onClick={() => handleOAuth("apple")}
               disabled={isOAuthLoading !== null}
             >
@@ -161,11 +163,11 @@ export default function RegisterPage() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
+              <Separator className="w-full bg-border/50" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                Ou continuez avec
+              <span className="bg-white px-2 text-muted-foreground font-medium">
+                Ou continuez avec email
               </span>
             </div>
           </div>
@@ -180,9 +182,11 @@ export default function RegisterPage() {
                 }
                 disabled={establishmentsLoading}
               >
-                <SelectTrigger>
-                  <Building className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <SelectValue placeholder="Selectionnez votre etablissement" />
+                <SelectTrigger className="h-12 rounded-2xl bg-secondary/10 border-transparent focus:bg-white transition-colors">
+                  <div className="flex items-center">
+                    <Building className="h-4 w-4 mr-2 text-muted-foreground" />
+                    <SelectValue placeholder="Selectionnez votre etablissement" />
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   {establishments.map((establishment) => (
@@ -197,7 +201,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="fullName">Nom complet</Label>
               <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <User className="absolute left-4 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="fullName"
                   name="fullName"
@@ -205,7 +209,7 @@ export default function RegisterPage() {
                   placeholder="Jean Dupont"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="pl-10"
+                  className="pl-12 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
                   required
                   disabled={isLoading}
                 />
@@ -215,7 +219,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-4 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="email"
                   name="email"
@@ -223,7 +227,7 @@ export default function RegisterPage() {
                   placeholder="nom@exemple.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className="pl-10"
+                  className="pl-12 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
                   required
                   disabled={isLoading}
                 />
@@ -233,7 +237,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="phone">Telephone (WhatsApp)</Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Phone className="absolute left-4 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="phone"
                   name="phone"
@@ -241,7 +245,7 @@ export default function RegisterPage() {
                   placeholder="+237 6XX XXX XXX"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="pl-10"
+                  className="pl-12 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
                   required
                   disabled={isLoading}
                 />
@@ -251,7 +255,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="password">Mot de passe</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-4 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="password"
                   name="password"
@@ -259,7 +263,7 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={handleChange}
-                  className="pl-10 pr-10"
+                  className="pl-12 pr-12 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
                   required
                   disabled={isLoading}
                   minLength={8}
@@ -267,12 +271,12 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                  className="absolute right-4 top-3 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOff className="h-5 w-5" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-5 w-5" />
                   )}
                 </button>
               </div>
@@ -281,7 +285,7 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute left-4 top-3 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -289,14 +293,14 @@ export default function RegisterPage() {
                   placeholder="••••••••"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="pl-10"
+                  className="pl-12 h-12 bg-secondary/10 border-transparent focus:bg-white transition-colors"
                   required
                   disabled={isLoading}
                 />
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full h-12 text-lg font-bold shadow-md hover:shadow-lg transition-all" disabled={isLoading}>
               {isLoading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
               S&apos;inscrire
             </Button>
@@ -304,20 +308,20 @@ export default function RegisterPage() {
 
           <p className="text-xs text-muted-foreground text-center">
             En vous inscrivant, vous acceptez nos{" "}
-            <Link href="/terms" className="text-primary hover:underline">
+            <Link href="/terms" className="text-primary hover:underline font-medium">
               conditions d&apos;utilisation
             </Link>{" "}
             et notre{" "}
-            <Link href="/privacy" className="text-primary hover:underline">
+            <Link href="/privacy" className="text-primary hover:underline font-medium">
               politique de confidentialite
             </Link>
             .
           </p>
         </CardContent>
-        <CardFooter className="flex justify-center">
+        <CardFooter className="flex justify-center pb-8">
           <p className="text-sm text-muted-foreground">
             Deja un compte?{" "}
-            <Link href="/login" className="text-primary hover:underline">
+            <Link href="/login" className="text-accent-green font-bold hover:underline">
               Se connecter
             </Link>
           </p>
