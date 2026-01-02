@@ -27,7 +27,7 @@ export function ShopFilters() {
           <AccordionTrigger className="font-bold text-base hover:no-underline py-3">Catégories</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-3 pt-1 pb-4">
-              {["Manuels", "Uniformes", "Toges", "Sacs", "Fournitures", "Autre"].map((item) => (
+              {["Manuels", "Uniformes", "Toges", "Sacs", "Fournitures", "Numérique", "Services", "Covoiturage", "Restauration"].map((item) => (
                 <div key={item} className="flex items-center space-x-2">
                   <Checkbox id={`cat-${item}`} className="rounded-md border-input data-[state=checked]:bg-[#2D5016] data-[state=checked]:text-white border-muted-foreground/30" />
                   <Label htmlFor={`cat-${item}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
