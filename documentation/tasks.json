@@ -1,0 +1,342 @@
+[
+  {
+    "id": 1,
+    "title": "Setup Project Infrastructure and Authentication System",
+    "status": "pending",
+    "details": "Create Next.js 14 project with app router, configure PWA manifest and service worker. Set up Supabase project with Auth configuration for email/password and OAuth. Design and implement database schema for users, schools, roles (Parent, Teacher, Censeur/Vie Scolaire, Admin, Super-Admin). Implement RLS policies to ensure data isolation by role and school. Configure Supabase Storage for file uploads with encryption. Set up TypeScript types for all database entities and API responses. Configure Tailwind CSS and integrate shadcn/ui component library.",
+    "priority": "high",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Initialize Next.js 14 PWA Project with TypeScript and UI Framework",
+        "status": "pending",
+        "details": "Use 'npx create-next-app@latest' with TypeScript and app router. Install and configure Tailwind CSS. Add PWA manifest.json with app icons, theme colors, and display settings. Set up next-pwa plugin for service worker generation. Install shadcn/ui CLI and initialize with base components. Configure TypeScript strict mode and path aliases. Set up ESLint and Prettier for code quality.",
+        "description": "Create a new Next.js 14 project with app router, configure it as a Progressive Web App with TypeScript support, and integrate Tailwind CSS with shadcn/ui component library for the user interface foundation.",
+        "dependencies": [],
+        "testStrategy": "Test PWA manifest validation, service worker registration, TypeScript compilation without errors, and basic component rendering"
+      },
+      {
+        "id": 2,
+        "title": "Setup Supabase Backend Project and Database Configuration",
+        "status": "pending",
+        "details": "Create new Supabase project and obtain API keys. Install @supabase/supabase-js client library. Configure environment variables for SUPABASE_URL and SUPABASE_ANON_KEY. Create Supabase client configuration with proper TypeScript types. Set up database connection and verify connectivity. Configure Supabase CLI for local development and migrations.",
+        "description": "Initialize Supabase project, configure PostgreSQL database connection, and set up the foundational backend infrastructure with proper environment variables and connection settings.",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Test database connectivity, environment variable loading, and Supabase client initialization"
+      },
+      {
+        "id": 3,
+        "title": "Design and Implement Database Schema with User Management",
+        "status": "pending",
+        "details": "Design tables: users (id, email, name, avatar_url, created_at), schools (id, name, address, settings), user_roles (user_id, school_id, role, permissions), and role_permissions lookup table. Define roles: Parent, Teacher, Censeur/Vie Scolaire, Admin, Super-Admin. Create foreign key relationships and indexes. Implement database triggers for audit logging. Generate TypeScript types from database schema using Supabase CLI.",
+        "description": "Create comprehensive database schema for users, schools, and role-based system including all necessary tables, relationships, and constraints for the educational platform.",
+        "dependencies": [
+          2
+        ],
+        "testStrategy": "Test schema creation, foreign key constraints, data insertion/retrieval, and TypeScript type generation"
+      },
+      {
+        "id": 4,
+        "title": "Configure Authentication System with OAuth and Email/Password",
+        "status": "pending",
+        "details": "Enable email/password authentication in Supabase Auth settings. Configure OAuth providers (Google, GitHub, etc.) with proper redirect URLs. Set up email templates for verification and password reset. Implement authentication context provider in React. Create login, register, and password reset components using shadcn/ui. Configure session persistence and automatic token refresh. Set up protected route middleware.",
+        "description": "Set up Supabase Auth with multiple authentication methods, configure OAuth providers, and implement secure authentication flows with proper session management.",
+        "dependencies": [
+          3
+        ],
+        "testStrategy": "Test email/password registration and login, OAuth flows, session persistence, password reset functionality, and protected route access"
+      },
+      {
+        "id": 5,
+        "title": "Implement Row-Level Security and File Storage with Encryption",
+        "status": "pending",
+        "details": "Create RLS policies for each table ensuring users can only access data from their assigned school(s) and based on their role permissions. Implement policies for cross-school access for Super-Admin role. Configure Supabase Storage buckets with encryption enabled. Set up file upload policies based on user roles and file types. Create storage helper functions for secure file operations. Implement file size and type validation. Set up automatic file cleanup policies.",
+        "description": "Configure comprehensive Row-Level Security policies for role-based access control and set up Supabase Storage with encryption for secure file handling across different user roles and schools.",
+        "dependencies": [
+          4
+        ],
+        "testStrategy": "Test RLS policies with different user roles, verify data isolation between schools, test file upload/download with proper permissions, and validate encryption of stored files"
+      }
+    ],
+    "description": "Initialize the Next.js 14 PWA project with TypeScript, Tailwind CSS, and shadcn/ui components. Configure Supabase backend with PostgreSQL database, authentication, and Row-Level Security (RLS) for role-based access control.",
+    "dependencies": [],
+    "testStrategy": "Unit tests for authentication flows, integration tests for RLS policies, end-to-end tests for user registration and role assignment. Test PWA installation and offline capabilities."
+  },
+  {
+    "id": 2,
+    "title": "Implement WhatsApp Integration with Whapi.cloud",
+    "status": "pending",
+    "details": "Configure Whapi.cloud account and API credentials. Create Node.js webhook endpoints to handle incoming WhatsApp messages and process them based on message type (absence reports, textbook ads). Implement outbound messaging functions for notifications (absence confirmations, ad approvals). Create WhatsApp bot logic to parse structured messages and extract relevant data. Set up message queuing system to handle rate limits and ensure delivery within 30-second SLA. Implement phone number verification flow during user registration.",
+    "priority": "high",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Configure Whapi.cloud Account and API Integration",
+        "status": "pending",
+        "details": "Create Whapi.cloud account and obtain API token. Set up environment variables for API credentials. Create a Node.js API client class with methods for authentication, basic message sending, and error handling. Implement retry logic for API calls and configure base URL endpoints. Set up logging for API interactions.",
+        "description": "Set up Whapi.cloud account, obtain API credentials, and create basic API client configuration for WhatsApp messaging integration.",
+        "dependencies": [],
+        "testStrategy": "Unit tests with mocked API responses, verify credential validation and basic connectivity"
+      },
+      {
+        "id": 2,
+        "title": "Implement Webhook Endpoints for Incoming Messages",
+        "status": "pending",
+        "details": "Set up Express.js webhook endpoint at /webhook/whatsapp to receive POST requests from Whapi.cloud. Implement webhook signature verification for security. Create message parsing logic to extract sender, content, and message type. Set up routing logic to handle different message types (absence reports, textbook ads). Implement error handling and response acknowledgment to Whapi.cloud.",
+        "description": "Create Node.js webhook endpoints to receive and process incoming WhatsApp messages from Whapi.cloud, including message validation and routing.",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Integration tests with Whapi.cloud webhook simulator, verify message parsing and routing logic"
+      },
+      {
+        "id": 3,
+        "title": "Develop WhatsApp Bot Logic and Message Processing",
+        "status": "pending",
+        "details": "Implement message parsing algorithms for structured absence reports and textbook advertisements. Create data extraction functions using regex patterns and natural language processing for key information (student names, dates, book details, prices). Implement validation logic for required fields and data formats. Create automated response templates for different scenarios (confirmation, error messages, requests for clarification). Set up conversation state management for multi-step interactions.",
+        "description": "Create intelligent bot logic to parse structured messages, extract relevant data, and process different message types with appropriate validation and responses.",
+        "dependencies": [
+          2
+        ],
+        "testStrategy": "Unit tests for message parsing functions, integration tests with sample WhatsApp message formats"
+      },
+      {
+        "id": 4,
+        "title": "Build Outbound Messaging and Notification System",
+        "status": "pending",
+        "details": "Create outbound messaging service with functions for sending absence confirmations, ad approval notifications, and general alerts. Implement message templating system with dynamic content insertion. Set up delivery status tracking and read receipt handling. Create notification scheduling system for time-sensitive messages. Implement message formatting for different content types (text, images, documents) and ensure proper WhatsApp formatting compliance.",
+        "description": "Implement outbound messaging functions for sending notifications, confirmations, and automated responses through WhatsApp with proper formatting and delivery tracking.",
+        "dependencies": [
+          1,
+          3
+        ],
+        "testStrategy": "Integration tests with WhatsApp sandbox, verify message delivery and formatting across different message types"
+      },
+      {
+        "id": 5,
+        "title": "Implement Message Queuing and Rate Limiting System",
+        "status": "pending",
+        "details": "Implement Redis-based message queue for outbound messages with priority levels. Create rate limiting middleware to respect Whapi.cloud API limits (typically 1000 messages per minute). Set up queue processing workers with exponential backoff for failed messages. Implement SLA monitoring to ensure 30-second delivery targets. Create queue management dashboard for monitoring message status, retry attempts, and delivery metrics. Set up phone number verification flow during user registration with OTP generation and validation.",
+        "description": "Set up message queuing system with rate limiting to handle high message volumes while maintaining 30-second SLA and compliance with Whapi.cloud API limits.",
+        "dependencies": [
+          4
+        ],
+        "testStrategy": "Load testing with 500-800 messages/day simulation, verify SLA compliance and rate limiting effectiveness"
+      }
+    ],
+    "description": "Set up WhatsApp messaging integration using Whapi.cloud API for two-way communication, including webhook handlers for incoming messages and automated notification system.",
+    "dependencies": [
+      1
+    ],
+    "testStrategy": "Mock Whapi.cloud API for unit tests, integration tests with actual WhatsApp sandbox, load testing for message volume handling (500-800 messages/day per school)."
+  },
+  {
+    "id": 3,
+    "title": "Build Module Connect - Absence Management System",
+    "status": "pending",
+    "details": "Create responsive web forms for absence reporting with date picker, reason selection, and file upload (JPG/PDF, max 5MB). Implement client-side image compression and validation. Build WhatsApp bot commands for absence reporting via chat. Create admin dashboard for reviewing pending absence requests with approve/reject actions. Implement automatic WhatsApp notifications to parents upon admin decisions. Add absence history view with role-based filtering. Ensure offline caching of recent absence data for read-only access.",
+    "priority": "medium",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Create responsive web forms for absence reporting",
+        "status": "pending",
+        "details": "Build HTML forms with responsive CSS framework (Bootstrap/Tailwind). Implement date picker component with calendar widget. Create dropdown for absence reasons (sick, family emergency, etc.). Add file upload input with drag-and-drop support for JPG/PDF files up to 5MB. Implement client-side JavaScript for file validation, image compression using canvas API, and form validation before submission. Include progress indicators for file uploads.",
+        "description": "Develop the core web interface for absence reporting including date picker, reason selection dropdown, and file upload functionality with client-side validation and image compression.",
+        "dependencies": [],
+        "testStrategy": "Unit tests for form validation logic, component tests for file upload and compression, visual regression tests for responsive design across devices"
+      },
+      {
+        "id": 2,
+        "title": "Implement WhatsApp bot commands for absence reporting",
+        "status": "pending",
+        "details": "Set up WhatsApp Business API integration or use WhatsApp Web API wrapper. Create bot command handlers for absence reporting (/report_absence, /my_absences). Implement conversation flow with prompts for date, reason, and file attachments. Handle file uploads through WhatsApp media messages. Store conversation state and validate inputs. Provide confirmation messages and error handling for invalid inputs.",
+        "description": "Build WhatsApp bot integration that allows users to report absences through chat commands with file attachment support and guided conversation flow.",
+        "dependencies": [],
+        "testStrategy": "Integration tests with WhatsApp API mock, conversation flow tests, file upload handling tests"
+      },
+      {
+        "id": 3,
+        "title": "Build admin dashboard for absence request management",
+        "status": "pending",
+        "details": "Design admin dashboard with pending requests queue showing student name, date, reason, and submitted files. Implement detailed view modal with full absence information and attached documents. Add approve/reject buttons with optional admin comments. Create bulk action functionality for multiple requests. Include filtering and sorting options by date, student, status. Add search functionality and pagination for large datasets.",
+        "description": "Create administrative interface for reviewing, approving, and rejecting absence requests with detailed view of submitted information and bulk actions.",
+        "dependencies": [
+          1,
+          2
+        ],
+        "testStrategy": "Component tests for dashboard UI, integration tests for approval/rejection workflow, accessibility tests for admin interface"
+      },
+      {
+        "id": 4,
+        "title": "Implement automatic WhatsApp notifications system",
+        "status": "pending",
+        "details": "Create notification service that triggers on absence status changes (approved/rejected). Design message templates for approval and rejection notifications including absence details and admin comments. Implement WhatsApp message sending functionality with error handling and retry logic. Add notification queue system for reliable delivery. Include opt-out mechanism for parents who don't want WhatsApp notifications. Log all notification attempts for audit purposes.",
+        "description": "Develop notification system that automatically sends WhatsApp messages to parents when admin decisions are made on absence requests.",
+        "dependencies": [
+          3
+        ],
+        "testStrategy": "Integration tests for notification triggers, message delivery tests with WhatsApp API, queue processing tests"
+      },
+      {
+        "id": 5,
+        "title": "Create absence history view with offline caching",
+        "status": "pending",
+        "details": "Design history view showing chronological list of all absences with status, dates, reasons, and admin decisions. Implement role-based filtering (students see only their absences, parents see their children's, admins see all). Add date range filtering, status filtering, and export functionality. Implement service worker for offline caching of recent absence data (last 30 days). Create offline-first data access layer with cache-first strategy for read operations. Add sync mechanism when connection is restored.",
+        "description": "Build comprehensive absence history interface with role-based filtering and implement offline caching system for read-only access to recent absence data.",
+        "dependencies": [
+          4
+        ],
+        "testStrategy": "End-to-end tests for complete absence reporting cycle, offline functionality tests, role-based access tests, cache synchronization tests"
+      }
+    ],
+    "description": "Develop the absence reporting and validation system with web forms, file upload capabilities, and admin approval workflow with automatic WhatsApp notifications.",
+    "dependencies": [
+      1,
+      2
+    ],
+    "testStrategy": "Component tests for forms and file uploads, integration tests for approval workflow, end-to-end tests for complete absence reporting cycle including WhatsApp notifications."
+  },
+  {
+    "id": 4,
+    "title": "Build Module Shop - Textbook Marketplace",
+    "status": "pending",
+    "details": "Create web forms for textbook ad creation with photo upload, price, description, subject, and level fields. Implement WhatsApp bot for ad posting via chat messages. Integrate OpenAI GPT-4o API for automatic content moderation and flagging inappropriate content. Build searchable and filterable catalog interface with subject, level, and school filters. Implement 'Buy via WhatsApp' functionality that opens preformatted chat with seller. Create moderation dashboard for censeurs to review flagged ads. Add ad management features for parents to edit/delete their listings.",
+    "priority": "medium",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Implement Ad Creation System with Photo Upload",
+        "status": "pending",
+        "details": "Create React components for ad creation form with fields for title, description, price, subject, academic level, and condition. Implement file upload component with image preview, compression, and validation (file size, format). Set up backend API endpoints for ad creation with image storage using cloud storage service. Include form validation on both frontend and backend with proper error handling.",
+        "description": "Build the core ad creation functionality including web forms for textbook listings with photo upload, price, description, subject, and level fields. Include form validation and image processing capabilities.",
+        "dependencies": [],
+        "testStrategy": "Unit tests for form validation, component tests for file upload functionality, integration tests for ad creation API endpoints"
+      },
+      {
+        "id": 2,
+        "title": "Integrate GPT-4o Content Moderation System",
+        "status": "pending",
+        "details": "Set up OpenAI API client and configure GPT-4o model for content analysis. Create moderation service that analyzes ad text and images for inappropriate content, spam, or policy violations. Implement automatic flagging system with confidence scores. Set up webhook or queue system to process moderation results and update ad status accordingly.",
+        "description": "Implement OpenAI GPT-4o API integration for automatic content moderation to detect and flag inappropriate content in textbook ads including descriptions and images.",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Unit tests for GPT-4o API integration, mock tests for various content scenarios, integration tests for moderation workflow"
+      },
+      {
+        "id": 3,
+        "title": "Build Searchable Textbook Catalog Interface",
+        "status": "pending",
+        "details": "Create catalog page with grid/list view toggle for textbook listings. Implement search bar with text-based search across titles and descriptions. Build filter sidebar with dropdowns for subject, academic level, school, price range sliders, and condition checkboxes. Add sorting options by price, date posted, and relevance. Implement pagination or infinite scroll for large result sets.",
+        "description": "Develop the main catalog interface with search functionality, filtering options by subject, academic level, school, price range, and condition. Include sorting and pagination capabilities.",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Component tests for search and filter functionality, integration tests for catalog API endpoints, performance tests for large datasets"
+      },
+      {
+        "id": 4,
+        "title": "Implement WhatsApp Integration for Communication",
+        "status": "pending",
+        "details": "Set up WhatsApp Business API integration with webhook endpoints. Create bot commands for posting ads through WhatsApp with guided conversation flow. Implement 'Buy via WhatsApp' buttons that generate deep links with preformatted messages including ad details. Set up message templates for buyer-seller introductions and handle WhatsApp message routing and notifications.",
+        "description": "Build WhatsApp bot for ad posting via chat messages and 'Buy via WhatsApp' functionality that opens preformatted chats between buyers and sellers.",
+        "dependencies": [
+          1,
+          2
+        ],
+        "testStrategy": "Integration tests for WhatsApp API endpoints, end-to-end tests for bot conversation flows, manual testing for deep link functionality"
+      },
+      {
+        "id": 5,
+        "title": "Create Moderation Dashboard and Ad Management",
+        "status": "pending",
+        "details": "Build admin dashboard with queue of flagged ads showing moderation scores and reasons. Include approve/reject actions with optional feedback messages. Create user dashboard for ad owners to view their listings, edit details, mark as sold, or delete ads. Implement role-based access control for different user types. Add analytics and reporting features for moderation statistics.",
+        "description": "Develop admin dashboard for censeurs to review flagged content and user interface for parents to manage their textbook listings including edit and delete functionality.",
+        "dependencies": [
+          2,
+          3
+        ],
+        "testStrategy": "Component tests for dashboard interfaces, integration tests for moderation actions, end-to-end tests for complete ad management workflow"
+      }
+    ],
+    "description": "Develop the textbook marketplace with ad creation, GPT-4o content moderation, searchable catalog, and WhatsApp-based purchase communication system.",
+    "dependencies": [
+      1,
+      2
+    ],
+    "testStrategy": "Unit tests for GPT-4o integration and content filtering, component tests for catalog search and filters, integration tests for ad creation and approval workflow, end-to-end tests for complete buy/sell cycle."
+  },
+  {
+    "id": 5,
+    "title": "Implement Admin Dashboard and Deploy to Production",
+    "status": "pending",
+    "details": "Create admin dashboard with overview of pending absence requests and textbook ads. Implement real-time statistics showing daily message volume, response times, adoption metrics, and system health. Add bulk approval/rejection capabilities for administrators. Set up production deployment pipeline with Vercel for frontend and Supabase for backend. Configure environment variables, SSL certificates, and domain setup. Implement comprehensive logging and monitoring with error tracking. Set up GDPR compliance features including data retention policies and user data deletion. Configure backup strategies and disaster recovery procedures. Implement security headers and rate limiting.",
+    "priority": "medium",
+    "subtasks": [
+      {
+        "id": 1,
+        "title": "Build Admin Dashboard Core Interface",
+        "status": "pending",
+        "details": "Implement React components for admin dashboard layout including sidebar navigation, header with user info, main content area, and responsive design. Create pages for absence request management and textbook ad oversight. Use shadcn/ui components for consistent styling. Set up protected routes requiring admin authentication. Include breadcrumb navigation and proper loading states.",
+        "description": "Create the main admin dashboard interface with navigation, layout components, and basic structure for managing absence requests and textbook ads",
+        "dependencies": [],
+        "testStrategy": "Unit tests for React components, integration tests for navigation flow, accessibility testing for admin interface"
+      },
+      {
+        "id": 2,
+        "title": "Implement Real-time Statistics and Monitoring Dashboard",
+        "status": "pending",
+        "details": "Create real-time dashboard using WebSocket connections or Server-Sent Events for live data updates. Implement charts and graphs using libraries like Chart.js or Recharts to display daily message volumes, average response times, user adoption metrics, and system performance indicators. Set up database queries for aggregating statistics and implement caching for performance. Include filters for date ranges and school-specific metrics.",
+        "description": "Build comprehensive statistics dashboard showing real-time metrics for message volume, response times, adoption rates, and system health indicators",
+        "dependencies": [
+          1
+        ],
+        "testStrategy": "Performance tests for real-time updates, load testing for concurrent admin users, data accuracy validation tests"
+      },
+      {
+        "id": 3,
+        "title": "Add Bulk Operations and Advanced Admin Features",
+        "status": "pending",
+        "details": "Create bulk selection UI with checkboxes and select-all functionality. Implement batch operations for approving/rejecting multiple items simultaneously with confirmation dialogs. Add advanced filtering options by date, school, status, and user type. Include search functionality with debounced input. Implement audit logging for all admin actions. Add export functionality for reports and data analysis.",
+        "description": "Implement bulk approval/rejection capabilities for absence requests and textbook ads, along with advanced filtering and search functionality",
+        "dependencies": [
+          1,
+          2
+        ],
+        "testStrategy": "Integration tests for bulk operations, performance tests for large dataset handling, audit trail verification tests"
+      },
+      {
+        "id": 4,
+        "title": "Configure Production Deployment Pipeline",
+        "status": "pending",
+        "details": "Configure Vercel project with automatic deployments from main branch. Set up Supabase production instance with proper database migrations and row-level security policies. Configure environment variables for production including API keys, database URLs, and third-party service credentials. Set up custom domain with SSL certificates. Implement CI/CD pipeline with automated testing before deployment. Configure preview deployments for staging environment.",
+        "description": "Set up complete production deployment infrastructure using Vercel for frontend and Supabase for backend with proper environment configuration",
+        "dependencies": [],
+        "testStrategy": "Deployment pipeline testing, SSL certificate validation, environment variable verification, staging environment testing"
+      },
+      {
+        "id": 5,
+        "title": "Implement Security, Monitoring, and GDPR Compliance",
+        "status": "pending",
+        "details": "Implement security headers using Next.js middleware including CSP, HSTS, and X-Frame-Options. Set up rate limiting for API endpoints using libraries like next-rate-limit. Configure comprehensive logging with structured logs and error tracking using services like Sentry. Implement GDPR compliance features including user data export, deletion capabilities, and data retention policies. Set up monitoring dashboards with uptime checks and performance metrics. Configure automated backup strategies for database and implement disaster recovery procedures.",
+        "description": "Set up comprehensive security measures, monitoring systems, error tracking, and GDPR compliance features including data retention and user data deletion",
+        "dependencies": [
+          3,
+          4
+        ],
+        "testStrategy": "Security penetration testing, GDPR compliance audit, monitoring and alerting validation, disaster recovery testing"
+      }
+    ],
+    "description": "Build comprehensive admin dashboard with real-time statistics, deploy the complete application to Vercel and Supabase, and implement monitoring and security measures.",
+    "dependencies": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "testStrategy": "Performance tests for dashboard loading and real-time updates, security penetration testing, load testing for multi-school deployment, monitoring and alerting validation, GDPR compliance audit."
+  }
+]

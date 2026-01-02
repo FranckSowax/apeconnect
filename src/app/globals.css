@@ -1,26 +1,161 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@plugin "tailwindcss-animate";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  --font-hagrid: var(--font-hagrid);
+  --font-sf-pro: var(--font-sf-pro);
+
+  --color-accent-yellow: var(--accent-yellow);
+  --color-accent-green: var(--accent-green);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-pink: var(--accent-pink);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 1.5rem; /* 24px */
+  
+  /* Palette */
+  --color-bg-base: #F8F3E7;
+  --color-text-base: #2D2D2B;
+  --color-accent-yellow: #F7D66E;
+  --color-accent-green: #9AAB65;
+  --color-accent-blue: #B6CAEB;
+  --color-accent-pink: #FFB2DD;
+
+  --background: var(--color-bg-base);
+  --foreground: var(--color-text-base);
+
+  --card: #FFFFFF;
+  --card-foreground: var(--color-text-base);
+
+  --popover: #FFFFFF;
+  --popover-foreground: var(--color-text-base);
+
+  --primary: var(--color-text-base);
+  --primary-foreground: #FFFFFF;
+
+  --secondary: var(--color-accent-yellow);
+  --secondary-foreground: var(--color-text-base);
+
+  --muted: #EDE8DB; /* Slightly darker than background */
+  --muted-foreground: #6B6B6B;
+
+  --accent: var(--color-accent-blue);
+  --accent-foreground: var(--color-text-base);
+
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #E6E1D6;
+  --input: #E6E1D6;
+  --ring: var(--color-text-base);
+
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: var(--color-text-base);
+  --sidebar-primary: var(--color-text-base);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: var(--color-bg-base);
+  --sidebar-accent-foreground: var(--color-text-base);
+  --sidebar-border: #E6E1D6;
+  --sidebar-ring: var(--color-text-base);
+
+  /* Fonts */
+  --font-hagrid: 'Hagrid', serif;
+  --font-sf-pro: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dark {
+  /* Dark mode not explicitly requested but providing reasonable fallbacks or keeping light mode structure for now as per strict visual identity. 
+     The brief specifies a light background #F8F3E7, so we might want to enforce light mode or map dark mode to similar tones if needed.
+     For now, I'll map dark mode to inverted but keep the colored accents. 
+  */
+  --background: #1A1A1A;
+  --foreground: #F8F3E7;
+  
+  --card: #2D2D2B;
+  --card-foreground: #F8F3E7;
+  
+  --popover: #2D2D2B;
+  --popover-foreground: #F8F3E7;
+  
+  --primary: #F8F3E7;
+  --primary-foreground: #2D2D2B;
+  
+  --secondary: #F7D66E;
+  --secondary-foreground: #2D2D2B;
+  
+  --muted: #2D2D2B;
+  --muted-foreground: #A1A1A1;
+  
+  --accent: #B6CAEB;
+  --accent-foreground: #2D2D2B;
+  
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #404040;
+  --input: #404040;
+  --ring: #F8F3E7;
+
+  --sidebar: #2D2D2B;
+  --sidebar-foreground: #F8F3E7;
+  --sidebar-primary: #F8F3E7;
+  --sidebar-primary-foreground: #2D2D2B;
+  --sidebar-accent: #404040;
+  --sidebar-accent-foreground: #F8F3E7;
+  --sidebar-border: #404040;
+  --sidebar-ring: #F8F3E7;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground font-sf-pro;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-hagrid;
+  }
 }
