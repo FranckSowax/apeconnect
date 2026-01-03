@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { ArrowLeft, Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Upload, X, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -182,33 +182,33 @@ export default function NewAdPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+    <div className="space-y-6 max-w-3xl mx-auto pb-8">
+      <div className="flex items-center gap-4 mb-4">
+        <Button variant="ghost" size="icon" className="rounded-full hover:bg-white bg-white/50" asChild>
           <Link href="/shop">
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5 text-[#062F28]" />
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold">Publier une annonce</h1>
-          <p className="text-muted-foreground">
-            Vendez vos manuels scolaires
+          <h1 className="text-2xl font-bold text-[#062F28]">Publier une annonce</h1>
+          <p className="text-muted-foreground text-sm">
+            Vendez vos manuels scolaires en quelques clics
           </p>
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Nouvelle annonce</CardTitle>
+      <Card className="border-0 shadow-sm rounded-[32px] bg-white overflow-hidden">
+        <CardHeader className="bg-[#F9FAFB] border-b border-[#F3F4F6] p-8">
+          <CardTitle className="text-[#062F28] font-bold">Détails de l&apos;annonce</CardTitle>
           <CardDescription>
-            Remplissez les informations ci-dessous pour creer votre annonce
+            Remplissez les informations ci-dessous pour créer votre annonce
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <CardContent className="p-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
             {/* Photos */}
-            <div className="space-y-2">
-              <Label>Photos *</Label>
+            <div className="space-y-4">
+              <Label className="text-base font-semibold text-[#062F28]">Photos *</Label>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
                 {photoPreviews.map((preview, index) => (
                   <div key={index} className="relative aspect-square">
@@ -216,23 +216,25 @@ export default function NewAdPage() {
                       src={preview}
                       alt={`Photo ${index + 1}`}
                       fill
-                      className="object-cover rounded-lg"
+                      className="object-cover rounded-2xl border border-zinc-100"
                     />
                     <Button
                       type="button"
                       variant="destructive"
                       size="icon"
-                      className="absolute -top-2 -right-2 h-6 w-6"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-md"
                       onClick={() => removePhoto(index)}
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-3 w-3" />
                     </Button>
                   </div>
                 ))}
                 {photos.length < 5 && (
-                  <label className="aspect-square border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-muted transition-colors">
-                    <Upload className="h-6 w-6 text-muted-foreground mb-1" />
-                    <span className="text-xs text-muted-foreground">Ajouter</span>
+                  <label className="aspect-square border-2 border-dashed border-[#E5E7EB] rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-[#F9FAFB] hover:border-[#9FE870] transition-all group">
+                    <div className="h-10 w-10 rounded-full bg-[#F3F4F6] flex items-center justify-center group-hover:bg-[#9FE870]/20 transition-colors mb-2">
+                       <Upload className="h-5 w-5 text-muted-foreground group-hover:text-[#062F28]" />
+                    </div>
+                    <span className="text-xs font-medium text-muted-foreground group-hover:text-[#062F28]">Ajouter</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -243,124 +245,129 @@ export default function NewAdPage() {
                   </label>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground">
-                Ajoutez jusqu&apos;a 5 photos (max 5 Mo chacune)
+              <p className="text-xs text-muted-foreground bg-[#F9FAFB] p-3 rounded-xl inline-block">
+                Astuce : Ajoutez jusqu&apos;à 5 photos claires pour vendre plus vite (max 5 Mo chacune).
               </p>
             </div>
 
-            {/* Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Titre de l&apos;annonce *</Label>
-              <Input
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="Ex: Manuel de Mathematiques 3eme"
-                required
-              />
-            </div>
+            <div className="grid gap-6">
+                {/* Title */}
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="font-semibold text-[#062F28]">Titre de l&apos;annonce *</Label>
+                  <Input
+                    id="title"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    placeholder="Ex: Manuel de Mathématiques 3ème"
+                    required
+                    className="rounded-2xl border-0 bg-[#F9FAFB] h-12 focus:ring-2 focus:ring-[#9FE870] focus:bg-white transition-all"
+                  />
+                </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Decrivez l'etat du livre, les annotations eventuelles..."
-                rows={4}
-              />
-            </div>
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="font-semibold text-[#062F28]">Description</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    placeholder="Décrivez l'état du livre, les annotations éventuelles..."
+                    rows={4}
+                    className="rounded-2xl border-0 bg-[#F9FAFB] min-h-[120px] focus:ring-2 focus:ring-[#9FE870] focus:bg-white transition-all resize-none p-4"
+                  />
+                </div>
 
-            {/* Price */}
-            <div className="space-y-2">
-              <Label htmlFor="price">Prix (FCFA) *</Label>
-              <Input
-                id="price"
-                name="price"
-                type="number"
-                value={formData.price}
-                onChange={handleChange}
-                placeholder="5000"
-                min={0}
-                required
-              />
-            </div>
+                {/* Price */}
+                <div className="space-y-2">
+                  <Label htmlFor="price" className="font-semibold text-[#062F28]">Prix (FCFA) *</Label>
+                  <Input
+                    id="price"
+                    name="price"
+                    type="number"
+                    value={formData.price}
+                    onChange={handleChange}
+                    placeholder="5000"
+                    min={0}
+                    required
+                    className="rounded-2xl border-0 bg-[#F9FAFB] h-12 focus:ring-2 focus:ring-[#9FE870] focus:bg-white transition-all"
+                  />
+                </div>
 
-            {/* Subject, Level, Condition */}
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-2">
-                <Label htmlFor="subject">Matiere *</Label>
-                <Select
-                  value={formData.subject}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, subject: value }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selectionnez" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SUBJECTS.map((subject) => (
-                      <SelectItem key={subject.value} value={subject.value}>
-                        {subject.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                {/* Subject, Level, Condition */}
+                <div className="grid gap-6 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="subject" className="font-semibold text-[#062F28]">Matière *</Label>
+                    <Select
+                      value={formData.subject}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, subject: value }))
+                      }
+                    >
+                      <SelectTrigger className="rounded-2xl border-0 bg-[#F9FAFB] h-12 focus:ring-2 focus:ring-[#9FE870] focus:bg-white transition-all">
+                        <SelectValue placeholder="Sélectionnez" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-[#E5E7EB]">
+                        {SUBJECTS.map((subject) => (
+                          <SelectItem key={subject.value} value={subject.value} className="rounded-lg focus:bg-[#F9FAFB]">
+                            {subject.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="level">Niveau *</Label>
-                <Select
-                  value={formData.level}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, level: value }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selectionnez" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {LEVELS.map((level) => (
-                      <SelectItem key={level.value} value={level.value}>
-                        {level.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="level" className="font-semibold text-[#062F28]">Niveau *</Label>
+                    <Select
+                      value={formData.level}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, level: value }))
+                      }
+                    >
+                      <SelectTrigger className="rounded-2xl border-0 bg-[#F9FAFB] h-12 focus:ring-2 focus:ring-[#9FE870] focus:bg-white transition-all">
+                        <SelectValue placeholder="Sélectionnez" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-[#E5E7EB]">
+                        {LEVELS.map((level) => (
+                          <SelectItem key={level.value} value={level.value} className="rounded-lg focus:bg-[#F9FAFB]">
+                            {level.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="condition">Etat</Label>
-                <Select
-                  value={formData.condition}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, condition: value }))
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selectionnez" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CONDITIONS.map((condition) => (
-                      <SelectItem key={condition.value} value={condition.value}>
-                        {condition.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="condition" className="font-semibold text-[#062F28]">État</Label>
+                    <Select
+                      value={formData.condition}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({ ...prev, condition: value }))
+                      }
+                    >
+                      <SelectTrigger className="rounded-2xl border-0 bg-[#F9FAFB] h-12 focus:ring-2 focus:ring-[#9FE870] focus:bg-white transition-all">
+                        <SelectValue placeholder="Sélectionnez" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-[#E5E7EB]">
+                        {CONDITIONS.map((condition) => (
+                          <SelectItem key={condition.value} value={condition.value} className="rounded-lg focus:bg-[#F9FAFB]">
+                            {condition.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex gap-4">
-              <Button type="button" variant="outline" asChild>
+            <div className="flex flex-col-reverse sm:flex-row gap-4 pt-4">
+              <Button type="button" variant="outline" className="w-full sm:w-auto rounded-full h-12 border-0 bg-[#F3F4F6] text-[#062F28] hover:bg-[#E5E7EB] font-bold" asChild>
                 <Link href="/shop">Annuler</Link>
               </Button>
-              <Button type="submit" disabled={isLoading}>
+              <Button type="submit" disabled={isLoading} className="w-full sm:flex-1 rounded-full h-12 bg-[#062F28] text-white hover:bg-[#062F28]/90 font-bold shadow-lg shadow-[#062F28]/20">
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Soumettre l&apos;annonce
               </Button>
