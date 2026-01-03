@@ -25,12 +25,12 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
 
-  // Redirect when user is authenticated after login
+  // If user is already authenticated, redirect immediately
   useEffect(() => {
-    if (user && loginSuccess) {
+    if (user) {
       router.push(redirect);
     }
-  }, [user, loginSuccess, router, redirect]);
+  }, [user, router, redirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,9 +44,11 @@ function LoginForm() {
         });
         setIsLoading(false);
       } else {
-        toast.success("Connexion reussie");
-        setLoginSuccess(true);
-        // Keep loading state until redirect happens
+        toast.success("Connexion réussie");
+        // Force a router refresh to update server components/middleware state
+        router.refresh();
+        // Navigate to dashboard
+        router.push(redirect);
       }
     } catch {
       toast.error("Une erreur est survenue");
