@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,10 +19,18 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isOAuthLoading, setIsOAuthLoading] = useState<string | null>(null);
-  const { signIn, signInWithOAuth } = useAuth();
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const { signIn, signInWithOAuth, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
+
+  // Redirect when user is authenticated after login
+  useEffect(() => {
+    if (user && loginSuccess) {
+      router.push(redirect);
+    }
+  }, [user, loginSuccess, router, redirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,13 +42,14 @@ function LoginForm() {
         toast.error("Erreur de connexion", {
           description: error.message || "Email ou mot de passe incorrect",
         });
+        setIsLoading(false);
       } else {
         toast.success("Connexion reussie");
-        router.push(redirect);
+        setLoginSuccess(true);
+        // Keep loading state until redirect happens
       }
     } catch {
       toast.error("Une erreur est survenue");
-    } finally {
       setIsLoading(false);
     }
   };
