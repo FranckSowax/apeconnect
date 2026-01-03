@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Establishment } from "@/types";
 
@@ -22,66 +22,53 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
-  const fetchEstablishments = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("establishments")
-      .select("*")
-      .order("name");
+  const fetchEstablishments = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from("establishments")
+        .select("*")
+        .order("name");
 
-    if (error) {
-      console.error("Error fetching establishments:", error);
-      setLoading(false);
-      return;
-    }
-
-    setEstablishments(data as Establishment[]);
-
-    // Restore previously selected establishment
-    const savedId = localStorage.getItem(STORAGE_KEY);
-    if (savedId && data) {
-      const saved = data.find((e: { id: string }) => e.id === savedId);
-      if (saved) {
-        setCurrentEstablishmentState(saved as Establishment);
+      if (error) {
+        console.error("Error fetching establishments:", error);
+        return;
       }
-    }
 
-    setLoading(false);
-  };
+      setEstablishments(data as Establishment[]);
+
+      // Restore previously selected establishment
+      if (typeof window !== "undefined") {
+        const savedId = localStorage.getItem(STORAGE_KEY);
+        if (savedId && data) {
+          const saved = data.find((e: { id: string }) => e.id === savedId);
+          if (saved) {
+            setCurrentEstablishmentState(saved as Establishment);
+          } else if (data.length > 0) {
+            // Default to first if saved one not found
+            setCurrentEstablishmentState(data[0] as Establishment);
+          }
+        } else if (data && data.length > 0) {
+          // Default to first if nothing saved
+          setCurrentEstablishmentState(data[0] as Establishment);
+        }
+      }
+    } catch (err) {
+      console.error("Unexpected error in fetchEstablishments:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [supabase]);
 
   const setCurrentEstablishment = (establishment: Establishment) => {
     setCurrentEstablishmentState(establishment);
-    localStorage.setItem(STORAGE_KEY, establishment.id);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, establishment.id);
+    }
   };
 
   useEffect(() => {
-    let mounted = true;
-
-    // Safety timeout
-    const safetyTimeout = setTimeout(() => {
-      if (mounted && loading) {
-        console.warn("Establishment loading timed out, forcing loading to false");
-        setLoading(false);
-      }
-    }, 5000);
-
-    const loadData = async () => {
-      try {
-        await fetchEstablishments();
-      } catch (err) {
-        console.error("Error in loadData:", err);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    loadData();
-
-    return () => {
-      mounted = false;
-      clearTimeout(safetyTimeout);
-    };
-  }, []);
+    fetchEstablishments();
+  }, [fetchEstablishments]);
 
   return (
     <EstablishmentContext.Provider

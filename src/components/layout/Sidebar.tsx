@@ -17,6 +17,11 @@ import {
   Menu,
   ChevronDown,
   LayoutDashboard,
+  HelpCircle,
+  Sparkles,
+  Wallet,
+  FileText,
+  PieChart
 } from "lucide-react";
 
 interface NavItem {
@@ -24,46 +29,64 @@ interface NavItem {
   href: string;
   icon: React.ElementType;
   roles?: string[];
-  color?: string; // Add color property for the requested accents
+  color?: string;
   children?: { title: string; href: string }[];
 }
 
 const navItems: NavItem[] = [
   {
-    title: "Shop",
-    href: "/shop",
-    icon: Store,
-    color: "text-accent-yellow", // Yellow
+    title: "Tableau de bord",
+    href: "/dashboard",
+    icon: LayoutDashboard,
   },
   {
-    title: "Connect",
+    title: "Vie Scolaire", // Connect
     href: "/connect",
     icon: Activity,
-    color: "text-accent-green", // Green
     children: [
-      { title: "Dashboard", href: "/connect" },
+      { title: "Vue d'ensemble", href: "/connect" },
       { title: "Absences", href: "/connect/new" },
-      { title: "History", href: "/connect/history" },
+      { title: "Bulletins", href: "/connect/history" },
     ],
   },
   {
-    title: "Profile",
-    href: "/profile", // Direct link to profile as per brief
-    icon: User,
-    color: "text-accent-blue", // Blue
+    title: "Boutique", // Shop
+    href: "/shop",
+    icon: Store,
+  },
+  {
+    title: "Mon Portefeuille",
+    href: "/wallet",
+    icon: Wallet,
+  },
+  {
+    title: "Factures",
+    href: "/invoices",
+    icon: FileText,
+  },
+  {
+    title: "Rapports",
+    href: "/reports",
+    icon: PieChart,
   },
   {
     title: "Admin",
     href: "/admin",
-    icon: LayoutDashboard,
+    icon: Settings, // Using Settings icon for Admin as generic
     roles: ["admin", "super_admin", "censeur"],
-    color: "text-accent-pink", // Pink
   },
+];
+
+const preferenceItems: NavItem[] = [
   {
-    title: "Settings",
+    title: "Paramètres",
     href: "/settings",
     icon: Settings,
-    color: "text-muted-foreground",
+  },
+  {
+    title: "Aide",
+    href: "/help",
+    icon: HelpCircle,
   },
 ];
 
@@ -78,31 +101,28 @@ function NavItemComponent({
 }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+  const isActive = pathname === item.href || (pathname.startsWith(item.href + "/") && item.href !== "/dashboard"); // Avoid matching /dashboard for everything
   const hasChildren = item.children && item.children.length > 0;
 
-  // Visual identity: Active state gets the pill shape and specific color background or text
-  // The brief says: "Pill-shaped buttons (rounded-full)"
-  
   if (hasChildren) {
     return (
-      <div className="mb-2">
+      <div className="mb-1">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "flex w-full items-center gap-4 rounded-full px-4 py-3 text-sm font-medium transition-all duration-200",
+            "flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
             isActive
-              ? "bg-white shadow-sm text-foreground" 
-              : "text-muted-foreground hover:bg-white/50 hover:text-foreground"
+              ? "bg-white text-foreground shadow-sm ring-1 ring-black/5" 
+              : "text-muted-foreground hover:bg-black/5 hover:text-foreground"
           )}
         >
-          <item.icon className={cn("h-5 w-5", isActive ? item.color : "text-muted-foreground")} />
+          <item.icon className={cn("h-5 w-5", isActive ? "text-primary" : "text-muted-foreground")} />
           {!isCollapsed && (
             <>
               <span className="flex-1 text-left">{item.title}</span>
               <ChevronDown
                 className={cn(
-                  "h-4 w-4 transition-transform",
+                  "h-4 w-4 transition-transform text-muted-foreground",
                   isOpen && "rotate-180"
                 )}
               />
@@ -110,17 +130,17 @@ function NavItemComponent({
           )}
         </button>
         {!isCollapsed && isOpen && (
-          <div className="ml-4 mt-2 space-y-1 border-l-2 border-border pl-4">
+          <div className="ml-4 mt-1 space-y-1 border-l border-border pl-4">
             {item.children?.map((child) => (
               <Link
                 key={child.href}
                 href={child.href}
                 onClick={onNavigate}
                 className={cn(
-                  "block rounded-full px-4 py-2 text-sm transition-colors",
+                  "block rounded-lg px-4 py-2 text-sm transition-colors",
                   pathname === child.href
                     ? "bg-white font-medium text-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-white/50 hover:text-foreground"
+                    : "text-muted-foreground hover:bg-black/5 hover:text-foreground"
                 )}
               >
                 {child.title}
@@ -137,13 +157,13 @@ function NavItemComponent({
       href={item.href}
       onClick={onNavigate}
       className={cn(
-        "flex items-center gap-4 rounded-full px-4 py-3 text-sm font-medium transition-all duration-200 mb-2",
+        "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 mb-1",
         isActive
-          ? "bg-white shadow-sm text-foreground"
-          : "text-muted-foreground hover:bg-white/50 hover:text-foreground"
+          ? "bg-white text-foreground shadow-sm ring-1 ring-black/5"
+          : "text-muted-foreground hover:bg-black/5 hover:text-foreground"
       )}
     >
-      <item.icon className={cn("h-5 w-5", isActive ? item.color : "text-muted-foreground")} />
+      <item.icon className={cn("h-5 w-5", isActive ? "text-primary" : "text-muted-foreground")} />
       {!isCollapsed && <span>{item.title}</span>}
     </Link>
   );
@@ -158,57 +178,76 @@ export function SidebarContent({ isCollapsed, onNavigate }: { isCollapsed: boole
   });
 
   return (
-    <div className="flex h-full flex-col bg-background/50 backdrop-blur-xl">
+    <div className="flex h-full flex-col bg-white border-r border-border">
       {/* Logo */}
       <div className={cn("flex h-20 items-center px-6", isCollapsed && "justify-center px-2")}>
         <Link href="/dashboard" onClick={onNavigate} className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-accent-yellow flex items-center justify-center shadow-sm">
-            <span className="text-primary font-bold text-xl">A</span>
+          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
+            <span className="text-white font-bold text-lg font-hagrid">F</span>
           </div>
           {!isCollapsed && (
-            <div className="flex flex-col">
-              <span className="font-hagrid font-bold text-lg leading-none">APE+</span>
-              <span className="text-xs text-muted-foreground font-medium">Connect & Shop</span>
-            </div>
+            <span className="font-hagrid font-bold text-xl text-foreground">Fynix</span>
           )}
         </Link>
       </div>
 
-      {/* Navigation */}
-      <ScrollArea className="flex-1 px-4 py-4">
-        <nav>
-          {filteredNavItems.map((item) => (
-            <NavItemComponent
-              key={item.href}
-              item={item}
-              isCollapsed={isCollapsed}
-              onNavigate={onNavigate}
-            />
-          ))}
-        </nav>
+      <ScrollArea className="flex-1 px-4 py-2">
+        <div className="mb-2 px-2">
+          {!isCollapsed && <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">Menu Principal</h3>}
+          <nav>
+            {filteredNavItems.map((item) => (
+              <NavItemComponent
+                key={item.href}
+                item={item}
+                isCollapsed={isCollapsed}
+                onNavigate={onNavigate}
+              />
+            ))}
+          </nav>
+        </div>
+
+        <div className="mt-6 px-2">
+          {!isCollapsed && <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">Préférences</h3>}
+          <nav>
+            {preferenceItems.map((item) => (
+              <NavItemComponent
+                key={item.href}
+                item={item}
+                isCollapsed={isCollapsed}
+                onNavigate={onNavigate}
+              />
+            ))}
+          </nav>
+        </div>
       </ScrollArea>
 
-      {/* User section */}
-      <div className="p-4 mt-auto">
-        {!isCollapsed && user && (
-          <div className="mb-4 px-4 py-3 bg-white rounded-3xl shadow-sm border border-border/50">
-            <p className="text-sm font-bold truncate text-foreground">{user.full_name || user.email}</p>
-            <p className="text-xs text-muted-foreground capitalize mt-0.5">{user.role?.replace("_", " ")}</p>
+      {/* Upgrade Plan Card */}
+      {!isCollapsed && (
+        <div className="p-4 mx-4 mb-4 bg-white rounded-2xl shadow-sm border border-border">
+          <div className="flex justify-center mb-3">
+            <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+              <Sparkles className="h-5 w-5" />
+            </div>
           </div>
-        )}
-        <Button
-          variant="ghost"
-          size={isCollapsed ? "icon" : "default"}
-          className={cn(
-            "w-full rounded-full hover:bg-destructive/10 hover:text-destructive text-muted-foreground",
-            !isCollapsed && "justify-start px-4"
-          )}
-          onClick={() => signOut()}
-        >
-          <LogOut className="h-5 w-5" />
-          {!isCollapsed && <span className="ml-3">Sign Out</span>}
-        </Button>
-      </div>
+          <h4 className="text-center font-bold text-foreground mb-1">Pass Premium</h4>
+          <p className="text-center text-xs text-muted-foreground mb-3">
+            Accédez à toutes les fonctionnalités et au support prioritaire.
+          </p>
+          <Button className="w-full bg-primary hover:bg-primary/90 text-white rounded-full text-xs font-bold h-9">
+            Mettre à niveau <ChevronDown className="ml-1 h-3 w-3 -rotate-90" />
+          </Button>
+        </div>
+      )}
+
+      {/* User Logout (Simplified) */}
+      {/* Keeping it simple or integrating into header as per Fynix design which has User in Header usually, 
+          but design shows "Jenny Wilson" at top of sidebar in a dropdown? 
+          Actually Image 2 shows "Jenny Wilson" at the TOP of the Sidebar. 
+          Let's move User Profile to TOP if possible? 
+          No, the Logo is at the top left "Fynix".
+          Below "Fynix" is "Jenny Wilson" dropdown.
+          Let's adjust.
+      */}
     </div>
   );
 }
@@ -219,8 +258,8 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "hidden lg:flex flex-col border-r border-border h-screen sticky top-0 bg-secondary/30 transition-all duration-300",
-        isCollapsed ? "w-20" : "w-72"
+        "hidden lg:flex flex-col h-screen sticky top-0 transition-all duration-300",
+        isCollapsed ? "w-20" : "w-64"
       )}
     >
       <SidebarContent isCollapsed={isCollapsed} />

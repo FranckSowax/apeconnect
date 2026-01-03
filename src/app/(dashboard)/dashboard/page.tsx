@@ -27,10 +27,17 @@ import {
   Vote,
   Eye,
   Heart,
+  ArrowUpRight,
+  ArrowDownLeft,
+  MoreHorizontal,
+  Search,
+  Mic,
+  Paperclip,
+  Wallet
 } from "lucide-react";
 import Link from "next/link";
 
-// Types pour les données
+// Types
 interface Announcement {
   id: number;
   title: string;
@@ -90,450 +97,328 @@ const children: Child[] = [
   { id: 2, name: "Pierre", class: "6ème A", absences: 1, attendanceRate: 98 },
 ];
 
-const recentAbsences = [
-  { id: 1, student: "Marie", reason: "Rendez-vous médical", date: "15 Jan", status: "approved" },
-  { id: 2, student: "Pierre", reason: "Maladie - Grippe", date: "12 Jan", status: "pending" },
+const recentActivities = [
+  { id: 1, title: "Absence justifiée", subtitle: "Marie - Rendez-vous médical", amount: "-1h", date: "15 Jan", status: "Completed", icon: Clock },
+  { id: 2, title: "Paiement Cantine", subtitle: "Rechargement compte", amount: "25.000 FCFA", date: "14 Jan", status: "Completed", icon: Wallet },
+  { id: 3, title: "Bulletin T1", subtitle: "Pierre - 6ème A", amount: "14.5/20", date: "10 Jan", status: "Completed", icon: FileText },
+  { id: 4, title: "Cotisation APE", subtitle: "Année 2024-2025", amount: "10.000 FCFA", date: "05 Jan", status: "Completed", icon: Users },
+  { id: 5, title: "Retard", subtitle: "Marie - Transport", amount: "-15min", date: "02 Jan", status: "Pending", icon: Clock },
 ];
 
 export default function DashboardPage() {
-  const { user, hasRole } = useAuth();
-  const isAdmin = hasRole(["censeur", "admin", "super_admin"]);
-  const [activeTab, setActiveTab] = useState<"all" | "urgent" | "events">("all");
-
-  const getCategoryColor = (category: Announcement["category"]) => {
-    switch (category) {
-      case "urgent": return "bg-red-100 text-red-700 border-red-200";
-      case "event": return "bg-[#B6CAEB]/30 text-[#2D5016] border-[#B6CAEB]";
-      case "admin": return "bg-[#F7D66E]/20 text-[#B8860B] border-[#F7D66E]";
-      default: return "bg-[#2D5016]/10 text-[#2D5016] border-[#2D5016]/20";
-    }
-  };
-
-  const getCategoryLabel = (category: Announcement["category"]) => {
-    switch (category) {
-      case "urgent": return "Urgent";
-      case "event": return "Événement";
-      case "admin": return "Administratif";
-      default: return "Information";
-    }
-  };
+  const { user } = useAuth();
 
   return (
-    <div className="space-y-4 sm:space-y-6 pb-8">
-      {/* Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
-            Bonjour, {user?.full_name?.split(" ")[0] || "Parent"} 👋
-          </h1>
-          <p className="text-muted-foreground text-sm sm:text-base mt-1">
-            Voici un aperçu de la vie scolaire de vos enfants
-          </p>
-        </div>
-        <div className="flex gap-2 sm:gap-3">
-          <Button variant="outline" size="sm" className="rounded-full gap-2 h-10 px-4">
-            <Bell className="h-4 w-4" />
-            <span className="hidden sm:inline">Notifications</span>
-            <Badge className="bg-red-500 text-white text-[10px] px-1.5 py-0 h-5 min-w-5 rounded-full">3</Badge>
-          </Button>
-          <Button asChild className="rounded-full bg-[#2D5016] hover:bg-[#4A7C23] gap-2 h-10 px-4">
-            <Link href="/connect/new">
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Signaler absence</span>
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Children Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {children.map((child) => (
-          <Card key={child.id} className="bg-white border-0 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-md transition-shadow">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12 bg-gradient-to-br from-[#2D5016] to-[#4A7C23]">
-                    <AvatarFallback className="text-white font-bold">{child.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-bold text-foreground">{child.name}</h3>
-                    <p className="text-sm text-muted-foreground">{child.class}</p>
-                  </div>
-                </div>
-                <Badge className={`rounded-full ${child.attendanceRate >= 95 ? "bg-[#2D5016]/10 text-[#2D5016]" : "bg-[#F7D66E]/20 text-[#B8860B]"}`}>
-                  {child.attendanceRate}% présence
-                </Badge>
+    <div className="space-y-6 pb-8">
+      {/* Top Section */}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* Wallet / Balance Card - GREEN CARD */}
+        <Card className="xl:col-span-1 bg-gradient-to-br from-[#9FE870] to-[#8CD660] border-0 rounded-[32px] overflow-hidden relative shadow-lg shadow-[#9FE870]/20">
+          <CardContent className="p-6 h-full flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-start mb-4">
+                <span className="text-[#062F28] font-medium text-sm bg-white/30 px-3 py-1 rounded-full">Solde APE</span>
+                <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-white/30 text-[#062F28] hover:bg-white/40">
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Absences ce mois</span>
-                  <span className="font-medium">{child.absences}</span>
-                </div>
-                <Progress value={child.attendanceRate} className="h-2" />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        {/* Announcements Section */}
-        <Card className="bg-white border-0 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden lg:col-span-2">
-          <CardHeader className="pb-2 px-4 sm:px-6 pt-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-[#2D5016]/10 flex items-center justify-center">
-                  <Megaphone className="h-4 w-4 text-[#2D5016]" />
-                </div>
-                <CardTitle className="text-base sm:text-lg font-bold">Tableau d'annonces</CardTitle>
-              </div>
-              <Button variant="ghost" size="sm" className="text-[#2D5016] hover:bg-[#2D5016]/5 rounded-full gap-1 text-sm">
-                Voir tout <ChevronRight className="h-4 w-4" />
+              <h2 className="text-[#062F28] text-4xl font-bold font-hagrid mb-1">20.670 <span className="text-xl">FCFA</span></h2>
+              <p className="text-[#062F28]/70 text-sm mb-6">+2.5% vs mois dernier</p>
+            </div>
+            
+            <div className="flex gap-3">
+              <Button className="flex-1 bg-white text-[#062F28] hover:bg-white/90 rounded-full font-bold h-12 shadow-sm border-0">
+                <ArrowDownLeft className="mr-2 h-4 w-4" />
+                Recharger
+              </Button>
+              <Button className="flex-1 bg-[#062F28] text-white hover:bg-[#062F28]/90 rounded-full font-bold h-12 shadow-sm border-0">
+                Payer
+                <ArrowUpRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex gap-2 mt-4 overflow-x-auto pb-1 -mx-1 px-1">
-              {[
-                { id: "all" as const, label: "Toutes" },
-                { id: "urgent" as const, label: "Urgentes" },
-                { id: "events" as const, label: "Événements" },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? "bg-foreground text-white"
-                      : "bg-secondary/30 text-muted-foreground hover:bg-secondary/50"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </CardHeader>
-
-          <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-            <div className="space-y-3 mt-3">
-              {announcements.map((announcement) => (
-                <div
-                  key={announcement.id}
-                  className={`p-4 rounded-xl sm:rounded-2xl transition-colors cursor-pointer ${
-                    announcement.read ? "bg-secondary/10 hover:bg-secondary/20" : "bg-secondary/30 hover:bg-secondary/40"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <Badge className={`rounded-full text-[10px] sm:text-xs border ${getCategoryColor(announcement.category)}`}>
-                          {getCategoryLabel(announcement.category)}
-                        </Badge>
-                        {!announcement.read && (
-                          <span className="h-2 w-2 rounded-full bg-[#2D5016]"></span>
-                        )}
-                      </div>
-                      <h4 className="font-semibold text-sm sm:text-base text-foreground truncate">{announcement.title}</h4>
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">{announcement.preview}</p>
-                    </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">{announcement.date}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Decorative background curves */}
+            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
           </CardContent>
         </Card>
 
-        {/* Calendar & Events Section */}
-        <Card className="bg-white border-0 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden">
-          <CardHeader className="pb-2 px-4 sm:px-6 pt-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-[#F7D66E]/20 flex items-center justify-center">
-                  <Calendar className="h-4 w-4 text-[#B8860B]" />
+        {/* Small Stats Cards */}
+        <div className="xl:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Card className="border-0 shadow-sm rounded-[24px] bg-white">
+            <CardContent className="p-5 flex flex-col justify-between h-full">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="h-10 w-10 rounded-full bg-[#F7D66E]/20 flex items-center justify-center text-[#B8860B]">
+                  <Clock className="h-5 w-5" />
                 </div>
-                <CardTitle className="text-base sm:text-lg font-bold">Événements</CardTitle>
+                <span className="font-medium text-muted-foreground">Absences</span>
               </div>
-            </div>
-          </CardHeader>
+              <div>
+                <span className="text-2xl font-bold text-foreground">3</span>
+                <Badge className="ml-2 bg-[#9FE870]/20 text-[#062F28] hover:bg-[#9FE870]/30 border-0">
+                  -2%
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
 
-          <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-            <div className="space-y-3 mt-2">
-              {upcomingEvents.map((event) => (
-                <div key={event.id} className="p-3 sm:p-4 rounded-xl bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-medium text-sm text-foreground line-clamp-1">{event.title}</h4>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                    <span>{event.date}</span>
-                    <span>•</span>
-                    <span>{event.time}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1">
-                      <Users className="h-3 w-3" /> {event.participants}
-                    </span>
-                  </div>
-                  {event.rsvpStatus === null ? (
-                    <div className="flex gap-2">
-                      <Button size="sm" className="flex-1 h-8 rounded-full bg-[#2D5016] hover:bg-[#4A7C23] text-xs">
-                        Je participe
-                      </Button>
-                      <Button size="sm" variant="outline" className="flex-1 h-8 rounded-full text-xs">
-                        Pas disponible
-                      </Button>
-                    </div>
-                  ) : (
-                    <Badge className={`rounded-full ${
-                      event.rsvpStatus === "confirmed"
-                        ? "bg-[#2D5016]/10 text-[#2D5016]"
-                        : event.rsvpStatus === "pending"
-                        ? "bg-[#F7D66E]/20 text-[#B8860B]"
-                        : "bg-red-100 text-red-700"
-                    }`}>
-                      {event.rsvpStatus === "confirmed" ? "Confirmé" : event.rsvpStatus === "pending" ? "En attente" : "Décliné"}
-                    </Badge>
-                  )}
+          <Card className="border-0 shadow-sm rounded-[24px] bg-white">
+            <CardContent className="p-5 flex flex-col justify-between h-full">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="h-10 w-10 rounded-full bg-[#B6CAEB]/20 flex items-center justify-center text-[#2D5016]">
+                  <MessageSquare className="h-5 w-5" />
                 </div>
-              ))}
+                <span className="font-medium text-muted-foreground">Messages</span>
+              </div>
+              <div>
+                <span className="text-2xl font-bold text-foreground">5</span>
+                <Badge className="ml-2 bg-[#9FE870]/20 text-[#062F28] hover:bg-[#9FE870]/30 border-0">
+                  2 news
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-sm rounded-[24px] bg-white">
+            <CardContent className="p-5 flex flex-col justify-between h-full">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="h-10 w-10 rounded-full bg-[#FFB2DD]/20 flex items-center justify-center text-[#E91E8C]">
+                  <Gift className="h-5 w-5" />
+                </div>
+                <span className="font-medium text-muted-foreground">Points</span>
+              </div>
+              <div>
+                <span className="text-2xl font-bold text-foreground">1.250</span>
+                <Badge className="ml-2 bg-[#9FE870]/20 text-[#062F28] hover:bg-[#9FE870]/30 border-0">
+                  +50
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Score Card */}
+        <Card className="xl:col-span-1 border-0 shadow-sm rounded-[24px] bg-white relative overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Qualité Dossier
+            </CardTitle>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-baseline space-x-2">
+              <h2 className="text-3xl font-bold text-[#062F28]">Excellent</h2>
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">Score</span>
+                <div className="h-2 w-24 bg-secondary rounded-full overflow-hidden">
+                  <div className="h-full bg-[#062F28] w-[92%]" />
+                </div>
+              </div>
+              <span className="text-3xl font-bold text-[#9FE870]">92%</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Second Row: Liaison + Absences */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        {/* Carnet de Liaison */}
-        <Card className="bg-white border-0 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden">
-          <CardHeader className="pb-2 px-4 sm:px-6 pt-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-[#B6CAEB]/30 flex items-center justify-center">
-                  <FileText className="h-4 w-4 text-[#2D5016]" />
-                </div>
-                <CardTitle className="text-base sm:text-lg font-bold">Carnet de liaison</CardTitle>
-              </div>
-              <Badge className="bg-[#2D5016] text-white rounded-full">
-                {liaisonMessages.filter(m => !m.read).length} nouveau{liaisonMessages.filter(m => !m.read).length > 1 ? "x" : ""}
+      {/* Middle Section: Chart & Assistant */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Main Chart */}
+        <Card className="xl:col-span-2 border-0 shadow-sm rounded-[32px] bg-white">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <div>
+              <CardTitle className="text-xl font-bold text-[#062F28]">Présence & Résultats</CardTitle>
+              <p className="text-sm text-muted-foreground">Année scolaire 2024-2025</p>
+            </div>
+            <div className="flex gap-2">
+              <Badge variant="outline" className="rounded-full px-3 py-1 cursor-pointer hover:bg-secondary bg-secondary/50 border-0">
+                Cette année
               </Badge>
             </div>
           </CardHeader>
-
-          <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-            <div className="space-y-3 mt-2">
-              {liaisonMessages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`p-4 rounded-xl transition-colors cursor-pointer ${
-                    message.read ? "bg-secondary/10 hover:bg-secondary/20" : "bg-secondary/30 hover:bg-secondary/40"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarFallback className={`${
-                        message.type === "teacher" ? "bg-[#B6CAEB]" : message.type === "admin" ? "bg-[#F7D66E]" : "bg-[#FFB2DD]"
-                      } text-[#2D5016] font-medium text-sm`}>
-                        {message.from.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium text-sm text-foreground truncate">{message.from}</span>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">{message.date}</span>
-                      </div>
-                      <p className="font-medium text-sm text-foreground mt-0.5 truncate">{message.subject}</p>
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{message.preview}</p>
-                    </div>
-                    {!message.read && <span className="h-2 w-2 rounded-full bg-[#2D5016] flex-shrink-0 mt-2"></span>}
+          <CardContent className="pl-0">
+            {/* CSS Bar Chart Simulation */}
+            <div className="h-[250px] w-full flex items-end justify-between px-6 gap-2 mt-4">
+              {[65, 45, 75, 55, 85, 70, 45, 60, 75, 65, 50, 60].map((h, i) => (
+                <div key={i} className="flex flex-col items-center gap-2 flex-1 group">
+                  <div className="w-full flex gap-1 h-full items-end justify-center relative">
+                    <div 
+                      className="w-3 bg-[#062F28] rounded-t-full transition-all group-hover:bg-[#062F28]/80"
+                      style={{ height: `${h}%` }}
+                    />
+                    <div 
+                      className="w-3 bg-[#9FE870] rounded-t-full transition-all group-hover:bg-[#9FE870]/80"
+                      style={{ height: `${h * 0.6}%` }}
+                    />
                   </div>
+                  <span className="text-xs text-muted-foreground font-medium">
+                    {["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov", "Déc"][i]}
+                  </span>
                 </div>
               ))}
             </div>
-            <Button variant="outline" className="w-full mt-4 rounded-full h-10" asChild>
-              <Link href="/connect">
-                <Send className="h-4 w-4 mr-2" />
-                Envoyer un message
-              </Link>
-            </Button>
+            <div className="flex justify-center gap-6 mt-6">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#062F28]" />
+                <span className="text-sm text-muted-foreground">Présence</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-[#9FE870]" />
+                <span className="text-sm text-muted-foreground">Moyenne</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Recent Absences */}
-        <Card className="bg-white border-0 shadow-sm rounded-2xl sm:rounded-3xl overflow-hidden">
-          <CardHeader className="pb-2 px-4 sm:px-6 pt-4 sm:pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-[#FFB2DD]/20 flex items-center justify-center">
-                  <Clock className="h-4 w-4 text-[#E91E8C]" />
-                </div>
-                <CardTitle className="text-base sm:text-lg font-bold">Absences récentes</CardTitle>
+        {/* AI Assistant */}
+        <Card className="xl:col-span-1 border-0 shadow-sm rounded-[32px] bg-white flex flex-col">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold text-[#062F28]">Assistant APE</CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col items-center justify-center text-center p-6">
+            <div className="h-24 w-24 rounded-full bg-gradient-to-br from-[#9FE870] to-[#062F28] flex items-center justify-center mb-6 shadow-xl shadow-[#9FE870]/20 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform">
+               <div className="absolute inset-0 bg-white/20 blur-xl group-hover:bg-white/30 transition-colors" />
+               <Search className="h-10 w-10 text-white relative z-10" />
+            </div>
+            <h3 className="text-lg font-bold text-[#062F28] mb-2">Besoin d'aide ?</h3>
+            
+            <div className="flex flex-wrap gap-2 justify-center mb-6">
+              <Badge variant="outline" className="rounded-full px-3 py-1 bg-secondary/30 border-0 hover:bg-secondary/50 cursor-pointer text-xs">
+                Justifier une absence
+              </Badge>
+              <Badge variant="outline" className="rounded-full px-3 py-1 bg-secondary/30 border-0 hover:bg-secondary/50 cursor-pointer text-xs">
+                Menu cantine
+              </Badge>
+              <Badge variant="outline" className="rounded-full px-3 py-1 bg-secondary/30 border-0 hover:bg-secondary/50 cursor-pointer text-xs">
+                Bulletin T1
+              </Badge>
+            </div>
+
+            <div className="w-full mt-auto relative">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <Search className="h-4 w-4" />
               </div>
-              <Button variant="ghost" size="sm" className="text-[#2D5016] hover:bg-[#2D5016]/5 rounded-full gap-1 text-sm" asChild>
-                <Link href="/connect/history">
-                  Historique <ChevronRight className="h-4 w-4" />
-                </Link>
-              </Button>
+              <input 
+                type="text" 
+                placeholder="Posez une question..." 
+                className="w-full h-12 rounded-full bg-[#F3F4F6] pl-10 pr-24 text-sm focus:outline-none focus:ring-2 focus:ring-[#9FE870] transition-all"
+              />
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                 <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full hover:bg-white">
+                   <Paperclip className="h-4 w-4 text-muted-foreground" />
+                 </Button>
+                 <Button size="icon" className="h-8 w-8 rounded-full bg-[#9FE870] hover:bg-[#8CD660] text-[#062F28]">
+                   <ArrowUpRight className="h-4 w-4" />
+                 </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Bottom Section: List & Stats */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Transactions / Activities List */}
+        <Card className="xl:col-span-2 border-0 shadow-sm rounded-[32px] bg-white">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xl font-bold text-[#062F28]">Activités Récentes</CardTitle>
+            <div className="flex gap-2">
+               <Button variant="outline" size="sm" className="rounded-full border-0 bg-secondary/30 hover:bg-secondary/50 text-xs h-8">
+                 Ce mois
+                 <ChevronRight className="ml-1 h-3 w-3" />
+               </Button>
+               <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full">
+                 <MoreHorizontal className="h-4 w-4" />
+               </Button>
             </div>
           </CardHeader>
-
-          <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-            <div className="space-y-3 mt-2">
-              {recentAbsences.map((absence) => (
-                <div key={absence.id} className="p-4 rounded-xl bg-secondary/20 hover:bg-secondary/30 transition-colors">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm">{absence.student}</span>
-                        <Badge className={`rounded-full text-[10px] ${
-                          absence.status === "approved"
-                            ? "bg-[#2D5016]/10 text-[#2D5016]"
-                            : "bg-[#F7D66E]/20 text-[#B8860B]"
-                        }`}>
-                          {absence.status === "approved" ? "Justifiée" : "En attente"}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{absence.reason}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{absence.date}</p>
+          <CardContent>
+            <div className="space-y-1">
+              {recentActivities.map((activity) => (
+                <div key={activity.id} className="flex items-center justify-between p-3 hover:bg-[#F9FAFB] rounded-2xl transition-colors group cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-full bg-[#F3F4F6] group-hover:bg-white group-hover:shadow-sm flex items-center justify-center transition-all">
+                      <activity.icon className="h-5 w-5 text-[#062F28]" />
                     </div>
+                    <div>
+                      <h4 className="font-bold text-[#062F28] text-sm">{activity.title}</h4>
+                      <p className="text-xs text-muted-foreground">{activity.subtitle}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="text-right hidden sm:block">
+                      <p className="font-bold text-[#062F28] text-sm">{activity.amount}</p>
+                      <p className="text-xs text-muted-foreground">{activity.date}</p>
+                    </div>
+                    <Badge 
+                      className={`rounded-full px-3 py-1 border-0 text-[10px] ${
+                        activity.status === "Completed" 
+                          ? "bg-[#9FE870]/20 text-[#062F28]" 
+                          : "bg-[#FFB2DD]/20 text-[#E91E8C]"
+                      }`}
+                    >
+                      {activity.status}
+                    </Badge>
                   </div>
                 </div>
               ))}
             </div>
-            <Button className="w-full mt-4 rounded-full bg-[#2D5016] hover:bg-[#4A7C23] h-10" asChild>
-              <Link href="/connect/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Signaler une absence
-              </Link>
-            </Button>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <Link href="/connect/new" className="group">
-          <Card className="h-full bg-gradient-to-br from-[#2D5016] to-[#4A7C23] border-0 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg transition-all group-hover:-translate-y-1">
-            <CardContent className="p-4 sm:p-5 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px]">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white/20 flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
-                <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-              </div>
-              <span className="text-white font-bold text-sm sm:text-base">Signaler absence</span>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/shop" className="group">
-          <Card className="h-full bg-gradient-to-br from-[#F7D66E] to-[#E5C55D] border-0 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg transition-all group-hover:-translate-y-1">
-            <CardContent className="p-4 sm:p-5 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px]">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white/30 flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
-                <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 text-[#2D5016]" />
-              </div>
-              <span className="text-[#2D5016] font-bold text-sm sm:text-base">APE+ Shop</span>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/shop/new" className="group">
-          <Card className="h-full bg-gradient-to-br from-[#FFB2DD] to-[#F799CC] border-0 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg transition-all group-hover:-translate-y-1">
-            <CardContent className="p-4 sm:p-5 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px]">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white/30 flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
-                <Gift className="h-5 w-5 sm:h-6 sm:w-6 text-[#E91E8C]" />
-              </div>
-              <span className="text-[#E91E8C] font-bold text-sm sm:text-base">Bourse solidaire</span>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/connect/history" className="group">
-          <Card className="h-full bg-gradient-to-br from-[#B6CAEB] to-[#9AB8E2] border-0 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg transition-all group-hover:-translate-y-1">
-            <CardContent className="p-4 sm:p-5 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px]">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white/30 flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
-                <Vote className="h-5 w-5 sm:h-6 sm:w-6 text-[#2D5016]" />
-              </div>
-              <span className="text-[#2D5016] font-bold text-sm sm:text-base">Sondages</span>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
-
-      {/* Admin Stats (only for admins) */}
-      {isAdmin && (
-        <div className="space-y-4">
-          <h2 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-[#2D5016]/10 flex items-center justify-center">
-              <TrendingUp className="h-4 w-4 text-[#2D5016]" />
-            </div>
-            Tableau de bord administrateur
-          </h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <Card className="bg-white border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-4 sm:p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground font-medium">En attente</p>
-                    <p className="text-2xl sm:text-3xl font-bold mt-1">12</p>
+        {/* Statistic Donut */}
+        <div className="xl:col-span-1 flex flex-col gap-6">
+           <Card className="border-0 shadow-sm rounded-[32px] bg-white flex-1">
+             <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-xl font-bold text-[#062F28]">Statistiques</CardTitle>
+                <Badge variant="outline" className="rounded-full border-0 bg-secondary/30 text-xs">
+                  Ce mois
+                </Badge>
+             </CardHeader>
+             <CardContent className="flex flex-col items-center justify-center pb-8">
+               <div className="relative h-48 w-48 mt-4">
+                  {/* CSS Conic Gradient Donut */}
+                  <div 
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: "conic-gradient(#062F28 0% 70%, #9FE870 70% 85%, #E5E7EB 85% 100%)"
+                    }}
+                  />
+                  <div className="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center">
+                     <p className="text-xs text-muted-foreground font-medium">Total Dépenses</p>
+                     <p className="text-2xl font-bold text-[#062F28]">35.000</p>
                   </div>
-                  <div className="h-10 w-10 rounded-full bg-[#F7D66E]/20 flex items-center justify-center">
-                    <Clock className="h-5 w-5 text-[#F7D66E]" />
+               </div>
+               <div className="flex w-full justify-between px-4 mt-8">
+                  <div className="flex items-center gap-2">
+                     <div className="h-3 w-3 rounded-full bg-[#062F28]" />
+                     <span className="text-xs font-medium text-[#062F28]">Cantine</span>
                   </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3 text-[#2D5016]" />
-                  <span className="text-[#2D5016] font-medium">+2</span> depuis hier
-                </p>
+                  <span className="text-xs font-bold">25k</span>
+               </div>
+               <div className="flex w-full justify-between px-4 mt-2">
+                  <div className="flex items-center gap-2">
+                     <div className="h-3 w-3 rounded-full bg-[#9FE870]" />
+                     <span className="text-xs font-medium text-[#062F28]">APE</span>
+                  </div>
+                  <span className="text-xs font-bold">10k</span>
+               </div>
+             </CardContent>
+           </Card>
+
+           <Card className="border-0 shadow-sm rounded-[32px] bg-[#9FE870] overflow-hidden">
+              <CardContent className="p-0">
+                 <Button className="w-full h-14 bg-transparent hover:bg-black/5 text-[#062F28] font-bold text-lg border-0 flex items-center justify-between px-6">
+                   <span>Menu Cantine</span>
+                   <ArrowUpRight className="h-5 w-5" />
+                 </Button>
               </CardContent>
-            </Card>
-
-            <Card className="bg-white border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-4 sm:p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground font-medium">Approuvées</p>
-                    <p className="text-2xl sm:text-3xl font-bold mt-1">156</p>
-                  </div>
-                  <div className="h-10 w-10 rounded-full bg-[#2D5016]/10 flex items-center justify-center">
-                    <CheckCircle2 className="h-5 w-5 text-[#2D5016]" />
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">Ce mois-ci</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-4 sm:p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground font-medium">Taux engagement</p>
-                    <p className="text-2xl sm:text-3xl font-bold mt-1">87%</p>
-                  </div>
-                  <div className="h-10 w-10 rounded-full bg-[#B6CAEB]/30 flex items-center justify-center">
-                    <Eye className="h-5 w-5 text-[#2D5016]" />
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3 text-[#2D5016]" />
-                  <span className="text-[#2D5016] font-medium">+5%</span> ce mois
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white border-0 shadow-sm rounded-2xl">
-              <CardContent className="p-4 sm:p-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground font-medium">Familles actives</p>
-                    <p className="text-2xl sm:text-3xl font-bold mt-1">324</p>
-                  </div>
-                  <div className="h-10 w-10 rounded-full bg-[#FFB2DD]/20 flex items-center justify-center">
-                    <Heart className="h-5 w-5 text-[#E91E8C]" />
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">Ce trimestre</p>
-              </CardContent>
-            </Card>
-          </div>
+           </Card>
         </div>
-      )}
+      </div>
     </div>
   );
 }

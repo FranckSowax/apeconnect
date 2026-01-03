@@ -58,24 +58,17 @@
 :root {
   --radius: 1.5rem; /* 24px */
 
-  /* Palette - CostFixers inspired green/beige */
-  --color-bg-base: #FDFBF7;
-  --color-bg-cream: #F5F1E8;
-  --color-text-base: #1A3D1A;
-  --color-accent-yellow: #F7D66E;
-  --color-accent-green: #2D5016;
-  --color-accent-green-light: #4A7C23;
-  --color-accent-blue: #B6CAEB;
-  --color-accent-pink: #FFB2DD;
-  --color-accent-olive: #9AAB65;
-
-  --accent-yellow: #F7D66E;
-  --accent-green: #2D5016;
-  --accent-green-light: #4A7C23;
-  --accent-blue: #B6CAEB;
-  --accent-pink: #FFB2DD;
-  --accent-olive: #9AAB65;
-  --bg-cream: #F5F1E8;
+  /* Palette - Fynix inspired */
+  --color-bg-base: #F3F4F6; /* Light gray background */
+  --color-bg-cream: #FFFFFF; /* Cards are white */
+  --color-text-base: #062F28; /* Dark Green/Black for text */
+  --color-accent-lime: #9FE870; /* The bright lime green */
+  --color-accent-dark: #062F28; /* The dark green */
+  --color-accent-grey: #7B7B7B;
+  
+  --accent-lime: #9FE870;
+  --accent-dark: #062F28;
+  --accent-grey: #7B7B7B;
 
   --background: var(--color-bg-base);
   --foreground: var(--color-text-base);
@@ -86,36 +79,36 @@
   --popover: #FFFFFF;
   --popover-foreground: var(--color-text-base);
 
-  --primary: var(--color-accent-green);
+  --primary: var(--color-accent-dark);
   --primary-foreground: #FFFFFF;
 
-  --secondary: var(--color-bg-cream);
+  --secondary: #FFFFFF;
   --secondary-foreground: var(--color-text-base);
 
-  --muted: #EDE8DB; /* Slightly darker than background */
-  --muted-foreground: #6B6B6B;
+  --muted: #F3F4F6;
+  --muted-foreground: var(--color-accent-grey);
 
-  --accent: var(--color-accent-blue);
-  --accent-foreground: var(--color-text-base);
+  --accent: var(--color-accent-lime);
+  --accent-foreground: var(--color-accent-dark);
 
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
 
-  --border: #E6E1D6;
-  --input: #E6E1D6;
-  --ring: var(--color-text-base);
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: var(--color-accent-lime);
 
   --sidebar: #FFFFFF;
-  --sidebar-foreground: var(--color-text-base);
-  --sidebar-primary: var(--color-text-base);
+  --sidebar-foreground: var(--color-accent-grey);
+  --sidebar-primary: var(--color-accent-dark);
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: var(--color-bg-base);
-  --sidebar-accent-foreground: var(--color-text-base);
-  --sidebar-border: #E6E1D6;
-  --sidebar-ring: var(--color-text-base);
+  --sidebar-accent: #F3F4F6;
+  --sidebar-accent-foreground: var(--color-accent-dark);
+  --sidebar-border: transparent;
+  --sidebar-ring: var(--color-accent-lime);
 
   /* Fonts */
-  --font-hagrid: 'Hagrid', serif;
+  --font-hagrid: 'Hagrid', sans-serif; /* Adjusted to sans-serif as per image */
   --font-sf-pro: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
