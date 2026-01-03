@@ -31,13 +31,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
 
-      if (session?.user) {
-        await fetchUserProfile(session.user.id, session.user);
+        if (error) {
+          console.error("Error getting session:", error);
+          setLoading(false);
+          return;
+        }
+
+        setSession(session);
+
+        if (session?.user) {
+          await fetchUserProfile(session.user.id, session.user);
+        }
+      } catch (err) {
+        console.error("Error in getInitialSession:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getInitialSession();
@@ -45,14 +57,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, session: Session | null) => {
-        setSession(session);
+        try {
+          setSession(session);
 
-        if (session?.user) {
-          await fetchUserProfile(session.user.id, session.user);
-        } else {
-          setUser(null);
+          if (session?.user) {
+            await fetchUserProfile(session.user.id, session.user);
+          } else {
+            setUser(null);
+          }
+        } catch (err) {
+          console.error("Error in onAuthStateChange:", err);
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       }
     );
 
