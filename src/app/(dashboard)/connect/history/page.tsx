@@ -75,26 +75,28 @@ export default function AbsenceHistoryPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/connect">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold">Historique des absences</h1>
-          <p className="text-muted-foreground">
-            Consultez toutes vos demandes d&apos;absence
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/connect">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+          </Button>
+          <div className="flex-1">
+            <h1 className="text-2xl sm:text-3xl font-bold">Historique des absences</h1>
+            <p className="text-sm text-muted-foreground">
+              Consultez toutes vos demandes d&apos;absence
+            </p>
+          </div>
         </div>
-        <Button variant="outline" size="icon" onClick={fetchAbsences}>
+        <Button variant="outline" size="icon" onClick={fetchAbsences} className="ml-auto sm:ml-0 hidden sm:flex">
           <RefreshCw className="h-4 w-4" />
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <CardTitle>Mes absences</CardTitle>
               <CardDescription>
@@ -104,7 +106,7 @@ export default function AbsenceHistoryPage() {
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-muted-foreground" />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-full sm:w-[150px]">
                   <SelectValue placeholder="Filtrer par statut" />
                 </SelectTrigger>
                 <SelectContent>
@@ -141,16 +143,16 @@ export default function AbsenceHistoryPage() {
               </Button>
             </div>
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Eleve</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Motif</TableHead>
-                    <TableHead>Statut</TableHead>
-                    <TableHead>Soumis le</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="min-w-[150px]">Eleve</TableHead>
+                    <TableHead className="min-w-[150px]">Date</TableHead>
+                    <TableHead className="min-w-[200px]">Motif</TableHead>
+                    <TableHead className="min-w-[100px]">Statut</TableHead>
+                    <TableHead className="min-w-[150px]">Soumis le</TableHead>
+                    <TableHead className="text-right min-w-[80px]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

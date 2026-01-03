@@ -263,7 +263,7 @@ export default function AdminAdsPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-muted-foreground">Prix:</span>
                   <p className="font-medium">{viewAd.price?.toLocaleString()} FCFA</p>

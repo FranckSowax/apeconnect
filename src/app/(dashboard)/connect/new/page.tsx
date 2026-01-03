@@ -363,11 +363,11 @@ export default function NewAbsencePage() {
             </div>
 
             {/* Submit Button */}
-            <div className="flex gap-4">
-              <Button type="button" variant="outline" asChild>
+            <div className="flex flex-col-reverse sm:flex-row gap-4 pt-4">
+              <Button type="button" variant="outline" className="w-full sm:w-auto" asChild>
                 <Link href="/connect">Annuler</Link>
               </Button>
-              <Button type="submit" disabled={isLoading}>
+              <Button type="submit" disabled={isLoading} className="w-full sm:w-auto bg-[#2D5016] hover:bg-[#4A7C23]">
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Envoyer la demande
               </Button>

@@ -165,17 +165,17 @@ export default function AdminAbsencesPage() {
               </p>
             </div>
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Parent</TableHead>
-                    <TableHead>Eleve</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Motif</TableHead>
-                    <TableHead>Justificatif</TableHead>
-                    <TableHead>Soumis le</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="min-w-[150px]">Parent</TableHead>
+                    <TableHead className="min-w-[150px]">Eleve</TableHead>
+                    <TableHead className="min-w-[150px]">Date</TableHead>
+                    <TableHead className="min-w-[200px]">Motif</TableHead>
+                    <TableHead className="min-w-[100px]">Justificatif</TableHead>
+                    <TableHead className="min-w-[150px]">Soumis le</TableHead>
+                    <TableHead className="text-right min-w-[100px]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
