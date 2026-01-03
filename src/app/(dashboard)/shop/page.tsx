@@ -23,6 +23,7 @@ import {
   GraduationCap as TutorIcon,
   Car,
   UtensilsCrossed,
+  ArrowUpRight,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
@@ -204,63 +205,59 @@ export default function ShopPage() {
     <div className="space-y-6 pb-8">
       {/* Stats Cards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <Card className="bg-white border-0 shadow-sm rounded-3xl overflow-hidden">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground font-medium mb-1">Annonces actives</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-foreground">156</span>
-                  <Badge className="bg-[#2D5016]/10 text-[#2D5016] border-0 rounded-full text-xs">
-                    +12%
-                  </Badge>
-                </div>
+        <Card className="bg-white border-0 shadow-sm rounded-[24px] overflow-hidden">
+          <CardContent className="p-5 flex flex-col justify-between h-full">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="h-10 w-10 rounded-full bg-[#F7D66E]/20 flex items-center justify-center text-[#B8860B]">
+                <BookOpen className="h-5 w-5" />
               </div>
-              <div className="h-12 w-12 rounded-full bg-[#F7D66E]/20 flex items-center justify-center">
-                <BookOpen className="h-6 w-6 text-[#F7D66E]" />
-              </div>
+              <span className="font-medium text-muted-foreground">Annonces actives</span>
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-[#062F28]">156</span>
+              <Badge className="ml-2 bg-[#9FE870]/20 text-[#062F28] hover:bg-[#9FE870]/30 border-0">
+                +12%
+              </Badge>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-0 shadow-sm rounded-3xl overflow-hidden">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground font-medium mb-1">Ventes ce mois</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-foreground">48</span>
-                  <Badge className="bg-[#2D5016]/10 text-[#2D5016] border-0 rounded-full text-xs">
-                    +8%
-                  </Badge>
-                </div>
+        <Card className="bg-white border-0 shadow-sm rounded-[24px] overflow-hidden">
+          <CardContent className="p-5 flex flex-col justify-between h-full">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="h-10 w-10 rounded-full bg-[#2D5016]/10 flex items-center justify-center text-[#2D5016]">
+                <TrendingUp className="h-5 w-5" />
               </div>
-              <div className="h-12 w-12 rounded-full bg-[#2D5016]/10 flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-[#2D5016]" />
-              </div>
+              <span className="font-medium text-muted-foreground">Ventes ce mois</span>
+            </div>
+            <div>
+              <span className="text-2xl font-bold text-[#062F28]">48</span>
+              <Badge className="ml-2 bg-[#9FE870]/20 text-[#062F28] hover:bg-[#9FE870]/30 border-0">
+                +8%
+              </Badge>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-[#2D5016] to-[#4A7C23] border-0 shadow-sm rounded-3xl overflow-hidden sm:col-span-2 lg:col-span-1">
-          <CardContent className="p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-white/80 font-medium mb-1">Publier une annonce</p>
-                <p className="text-white font-bold">Vendez vos articles</p>
-              </div>
-              <Link href="/shop/new">
-                <Button size="icon" className="h-12 w-12 rounded-full bg-white/20 hover:bg-white/30 text-white">
-                  <Plus className="h-6 w-6" />
-                </Button>
-              </Link>
+        {/* CTA Card - Gradient style matching dashboard */}
+        <Card className="bg-gradient-to-br from-[#9FE870] to-[#8CD660] border-0 shadow-lg shadow-[#9FE870]/20 rounded-[24px] overflow-hidden sm:col-span-2 lg:col-span-1 relative">
+          <CardContent className="p-5 flex items-center justify-between h-full relative z-10">
+            <div>
+              <p className="text-[#062F28]/80 font-medium mb-1 text-sm">Publier une annonce</p>
+              <p className="text-[#062F28] font-bold text-xl">Vendez vos articles</p>
             </div>
+            <Link href="/shop/new">
+              <Button size="icon" className="h-12 w-12 rounded-full bg-white text-[#062F28] hover:bg-white/90 shadow-sm">
+                <Plus className="h-6 w-6" />
+              </Button>
+            </Link>
           </CardContent>
+          <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl pointer-events-none" />
         </Card>
       </div>
 
       {/* Search Bar */}
-      <Card className="bg-white border-0 shadow-sm rounded-3xl overflow-hidden">
+      <Card className="bg-white border-0 shadow-sm rounded-[32px] overflow-hidden">
         <CardContent className="p-4">
           <div className="flex gap-3">
             <div className="relative flex-1">
@@ -269,28 +266,28 @@ export default function ShopPage() {
                 placeholder="Rechercher un article..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 h-12 rounded-2xl border-0 bg-secondary/30 text-base focus:bg-secondary/50 transition-colors"
+                className="pl-12 h-12 rounded-full border-0 bg-[#F3F4F6] text-base focus:bg-white focus:ring-2 focus:ring-[#9FE870] transition-all"
               />
             </div>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="h-12 w-12 rounded-2xl border-0 bg-secondary/30 hover:bg-secondary/50">
-                  <SlidersHorizontal className="h-5 w-5" />
+                <Button variant="outline" size="icon" className="h-12 w-12 rounded-full border-0 bg-[#F3F4F6] hover:bg-[#E5E7EB]">
+                  <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-full sm:w-80 border-l-border/50">
                 <div className="space-y-6 mt-6">
-                  <h3 className="font-bold text-lg">Filtres</h3>
+                  <h3 className="font-bold text-lg text-[#062F28]">Filtres</h3>
 
                   <div className="space-y-3">
                     <p className="text-sm font-medium text-muted-foreground">Prix</p>
                     <div className="flex gap-2 flex-wrap">
-                      <Button variant="outline" size="sm" className="rounded-full">0 - 5000 FCFA</Button>
-                      <Button variant="outline" size="sm" className="rounded-full">5000 - 15000 FCFA</Button>
+                      <Button variant="outline" size="sm" className="rounded-full border-zinc-200">0 - 5000 FCFA</Button>
+                      <Button variant="outline" size="sm" className="rounded-full border-zinc-200">5000 - 15000 FCFA</Button>
                     </div>
                     <div className="flex gap-2 flex-wrap">
-                      <Button variant="outline" size="sm" className="rounded-full">15000 - 30000 FCFA</Button>
-                      <Button variant="outline" size="sm" className="rounded-full">30000+ FCFA</Button>
+                      <Button variant="outline" size="sm" className="rounded-full border-zinc-200">15000 - 30000 FCFA</Button>
+                      <Button variant="outline" size="sm" className="rounded-full border-zinc-200">30000+ FCFA</Button>
                     </div>
                   </div>
 
@@ -298,14 +295,14 @@ export default function ShopPage() {
                     <p className="text-sm font-medium text-muted-foreground">État</p>
                     <div className="flex flex-wrap gap-2">
                       {["Neuf", "Très bon", "Bon", "Satisfaisant"].map((condition) => (
-                        <Button key={condition} variant="outline" size="sm" className="rounded-full">
+                        <Button key={condition} variant="outline" size="sm" className="rounded-full border-zinc-200">
                           {condition}
                         </Button>
                       ))}
                     </div>
                   </div>
 
-                  <Button className="w-full rounded-full bg-[#2D5016] hover:bg-[#4A7C23]">
+                  <Button className="w-full rounded-full bg-[#062F28] hover:bg-[#062F28]/90 text-white font-bold h-12">
                     Appliquer les filtres
                   </Button>
                 </div>
@@ -324,10 +321,10 @@ export default function ShopPage() {
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-medium text-sm whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-5 py-3 rounded-full font-medium text-sm whitespace-nowrap transition-all ${
                 isActive
-                  ? "bg-foreground text-white shadow-md"
-                  : "bg-white text-muted-foreground hover:bg-secondary/50 shadow-sm"
+                  ? "bg-[#062F28] text-white shadow-md shadow-[#062F28]/20"
+                  : "bg-white text-muted-foreground hover:bg-[#F3F4F6] shadow-sm border border-transparent"
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -338,17 +335,17 @@ export default function ShopPage() {
       </div>
 
       {/* Results Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-2">
         <p className="text-sm text-muted-foreground">
-          <span className="font-bold text-foreground">{filteredProducts.length}</span> articles trouvés
+          <span className="font-bold text-[#062F28]">{filteredProducts.length}</span> articles trouvés
         </p>
-        <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground gap-1">
+        <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground gap-1 hover:text-[#062F28] hover:bg-[#9FE870]/20">
           Trier par <ChevronDown className="h-4 w-4" />
         </Button>
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
@@ -360,18 +357,18 @@ export default function ShopPage() {
 
       {/* Empty State */}
       {filteredProducts.length === 0 && (
-        <Card className="bg-white border-0 shadow-sm rounded-3xl">
+        <Card className="bg-white border-0 shadow-sm rounded-[32px]">
           <CardContent className="p-12 text-center">
-            <div className="h-16 w-16 rounded-full bg-secondary/50 flex items-center justify-center mx-auto mb-4">
+            <div className="h-20 w-20 rounded-full bg-[#F3F4F6] flex items-center justify-center mx-auto mb-6">
               <Search className="h-8 w-8 text-muted-foreground" />
             </div>
-            <h3 className="font-bold text-lg mb-2">Aucun article trouvé</h3>
-            <p className="text-muted-foreground text-sm mb-4">
+            <h3 className="font-bold text-xl text-[#062F28] mb-2">Aucun article trouvé</h3>
+            <p className="text-muted-foreground text-sm mb-6">
               Essayez de modifier vos critères de recherche
             </p>
             <Button
               variant="outline"
-              className="rounded-full"
+              className="rounded-full border-zinc-200 hover:bg-[#F3F4F6] text-[#062F28]"
               onClick={() => {
                 setActiveCategory("all");
                 setSearchQuery("");
@@ -387,8 +384,7 @@ export default function ShopPage() {
       {filteredProducts.length > 0 && (
         <div className="flex justify-center pt-4">
           <Button
-            variant="outline"
-            className="rounded-full px-8 h-12 border-2 hover:bg-[#2D5016]/10 hover:border-[#2D5016] hover:text-[#2D5016] font-medium"
+            className="rounded-full px-8 h-12 bg-white text-[#062F28] hover:bg-[#F3F4F6] shadow-sm border border-zinc-100 font-bold"
           >
             Charger plus d&apos;articles
           </Button>

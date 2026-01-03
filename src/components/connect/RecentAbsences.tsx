@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight, Clock, CheckCircle2, XCircle } from "lucide-react";
 
 interface Absence {
@@ -43,59 +43,48 @@ const DUMMY_ABSENCES: Absence[] = [
   },
 ];
 
-const StatusIcon = ({ status }: { status: Absence["status"] }) => {
-  switch (status) {
-    case "pending":
-      return <Clock className="h-4 w-4 text-accent-yellow" />;
-    case "approved":
-      return <CheckCircle2 className="h-4 w-4 text-accent-green" />;
-    case "rejected":
-      return <XCircle className="h-4 w-4 text-destructive" />;
-  }
-};
-
 const StatusBadge = ({ status }: { status: Absence["status"] }) => {
   switch (status) {
     case "pending":
-      return <Badge variant="secondary" className="bg-accent-yellow/20 text-yellow-700 hover:bg-accent-yellow/30 border-0">En attente</Badge>;
+      return <Badge variant="secondary" className="bg-[#F7D66E]/20 text-[#B8860B] hover:bg-[#F7D66E]/30 border-0 rounded-full">En attente</Badge>;
     case "approved":
-      return <Badge variant="secondary" className="bg-accent-green/20 text-green-700 hover:bg-accent-green/30 border-0">Justifiée</Badge>;
+      return <Badge variant="secondary" className="bg-[#9FE870]/20 text-[#062F28] hover:bg-[#9FE870]/30 border-0 rounded-full">Justifiée</Badge>;
     case "rejected":
-      return <Badge variant="destructive" className="bg-destructive/10 text-destructive hover:bg-destructive/20 border-0">Injustifiée</Badge>;
+      return <Badge variant="destructive" className="bg-[#FFB2DD]/20 text-[#E91E8C] hover:bg-[#FFB2DD]/30 border-0 rounded-full">Injustifiée</Badge>;
   }
 };
 
 export function RecentAbsences() {
   return (
-    <Card className="h-full border-border/50 shadow-sm bg-white overflow-hidden">
-      <CardHeader className="pb-4">
+    <div className="flex flex-col h-full">
+      <CardHeader className="pb-2 pt-6 px-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="font-hagrid text-xl">Absences Récentes</CardTitle>
-          <Button variant="ghost" className="text-sm font-medium text-accent-blue hover:text-accent-blue/80 hover:bg-accent-blue/10 rounded-full">
+          <CardTitle className="font-bold text-xl text-[#062F28]">Absences Récentes</CardTitle>
+          <Button variant="ghost" className="text-sm font-medium text-muted-foreground hover:text-[#062F28] hover:bg-[#F3F4F6] rounded-full h-8 px-4">
             Voir tout
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="divide-y divide-border/50">
+      <div className="flex-1 p-0">
+        <div className="divide-y divide-zinc-100">
           {DUMMY_ABSENCES.map((absence) => (
             <div
               key={absence.id}
-              className="flex items-center justify-between p-4 hover:bg-secondary/20 transition-colors cursor-pointer group"
+              className="flex items-center justify-between p-4 px-6 hover:bg-[#F9FAFB] transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-4">
-                <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                <Avatar className="h-10 w-10 border border-zinc-100 shadow-sm">
                   <AvatarImage src={absence.studentAvatar} />
-                  <AvatarFallback className="bg-accent-blue/20 text-accent-blue font-bold">
+                  <AvatarFallback className="bg-[#9FE870]/20 text-[#062F28] font-bold">
                     {absence.studentName.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">
+                  <p className="font-bold text-sm text-[#062F28] group-hover:text-[#2D5016] transition-colors">
                     {absence.studentName}
                   </p>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-                    <span>{absence.date}</span>
+                    <span className="font-medium">{absence.date}</span>
                     <span>•</span>
                     <span>{absence.time}</span>
                   </div>
@@ -109,18 +98,20 @@ export function RecentAbsences() {
                     {absence.reason}
                   </span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                <div className="h-8 w-8 rounded-full bg-transparent group-hover:bg-white flex items-center justify-center transition-all">
+                   <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-[#062F28] transition-colors" />
+                </div>
               </div>
             </div>
           ))}
         </div>
         
-        <div className="p-4 bg-secondary/5">
-          <Button className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-medium h-10 shadow-sm">
+        <div className="p-6">
+          <Button className="w-full rounded-full bg-[#F3F4F6] text-[#062F28] hover:bg-[#E5E7EB] font-bold h-12 shadow-sm border-0">
             Signaler une nouvelle absence
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
