@@ -35,22 +35,26 @@ function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    console.log("Submitting login form for:", email);
 
     try {
       const { error } = await signIn(email, password);
       if (error) {
+        console.error("Login failed:", error);
         toast.error("Erreur de connexion", {
           description: error.message || "Email ou mot de passe incorrect",
         });
         setIsLoading(false);
       } else {
+        console.log("Login successful, redirecting to:", redirect);
         toast.success("Connexion réussie");
         // Force a router refresh to update server components/middleware state
         router.refresh();
         // Navigate to dashboard
         router.push(redirect);
       }
-    } catch {
+    } catch (err) {
+      console.error("Unexpected error during login:", err);
       toast.error("Une erreur est survenue");
       setIsLoading(false);
     }

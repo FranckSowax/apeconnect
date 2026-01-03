@@ -51,11 +51,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        console.log("Session retrieved:", session ? "Found" : "Null");
+        console.log("Session retrieved:", session ? "Found" : "Null", session?.user?.id);
         if (mounted) setSession(session);
 
         if (session?.user) {
-          await fetchUserProfile(session.user.id, session.user);
+          await ensureUserProfile(session.user);
         }
       } catch (err) {
         console.error("Error in getInitialSession:", err);
@@ -69,14 +69,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, session: Session | null) => {
-        console.log("Auth state change:", event);
+        console.log("Auth state change:", event, session?.user?.id);
         if (!mounted) return;
         
         try {
           setSession(session);
 
           if (session?.user) {
-            await fetchUserProfile(session.user.id, session.user);
+            await ensureUserProfile(session.user);
           } else {
             setUser(null);
           }
@@ -95,56 +95,101 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const fetchUserProfile = async (userId: string, supabaseUser?: SupabaseUser) => {
+  const ensureUserProfile = async (supabaseUser: SupabaseUser, retryCount = 0) => {
+    if (!supabaseUser) return;
+
     try {
+      console.log(`Fetching user profile for ${supabaseUser.id} (Attempt ${retryCount + 1})`);
       const { data, error } = await supabase
         .from("users")
         .select(`
           *,
           establishment:establishments(*)
         `)
-        .eq("id", userId)
+        .eq("id", supabaseUser.id)
         .single();
 
-      if (error) {
-        console.error("Error fetching user profile:", error);
-        // If user doesn't exist in users table but has auth session, create minimal user object
-        if (supabaseUser) {
-          const fallbackUser: User = {
-            id: userId,
+      if (error || !data) {
+        console.warn("User profile not found or error:", error);
+        
+        // Self-healing: Attempt to create the user profile if it doesn't exist
+        // This handles cases where the database trigger failed
+        if (retryCount < 2) {
+          console.log("Attempting self-healing: creating user profile...");
+          const metadata = supabaseUser.user_metadata || {};
+          
+          const newProfile: Partial<User> = {
+            id: supabaseUser.id,
             email: supabaseUser.email || "",
-            full_name: supabaseUser.user_metadata?.full_name || null,
-            avatar_url: null,
-            phone: supabaseUser.user_metadata?.phone || null,
-            phone_verified: false,
-            role: (supabaseUser.user_metadata?.role as UserRole) || "parent",
-            establishment_id: supabaseUser.user_metadata?.establishment_id || null,
-            created_at: new Date().toISOString(),
+            full_name: metadata.full_name || "",
+            phone: metadata.phone || "",
+            establishment_id: metadata.establishment_id || null,
+            role: (metadata.role as UserRole) || "parent",
             updated_at: new Date().toISOString(),
           };
-          setUser(fallbackUser);
+
+          const { error: insertError } = await supabase
+            .from("users")
+            .upsert(newProfile)
+            .select()
+            .single();
+
+          if (insertError) {
+            console.error("Self-healing failed:", insertError);
+            // Fallback to minimal user object if database write fails
+            setFallbackUser(supabaseUser);
+          } else {
+            console.log("Self-healing successful! Retrying fetch...");
+            // Add a small delay before retrying to allow DB to settle
+            setTimeout(() => ensureUserProfile(supabaseUser, retryCount + 1), 500);
+            return;
+          }
         } else {
-          setUser(null);
+          console.error("Max retries reached. Using fallback user.");
+          setFallbackUser(supabaseUser);
         }
         return;
       }
 
+      console.log("User profile loaded successfully:", data.id);
       setUser(data as User);
     } catch (err) {
-      console.error("Error in fetchUserProfile:", err);
-      setUser(null);
+      console.error("Error in ensureUserProfile:", err);
+      setFallbackUser(supabaseUser);
     }
   };
 
+  const setFallbackUser = (supabaseUser: SupabaseUser) => {
+    const fallbackUser: User = {
+      id: supabaseUser.id,
+      email: supabaseUser.email || "",
+      full_name: supabaseUser.user_metadata?.full_name || null,
+      avatar_url: null,
+      phone: supabaseUser.user_metadata?.phone || null,
+      phone_verified: false,
+      role: (supabaseUser.user_metadata?.role as UserRole) || "parent",
+      establishment_id: supabaseUser.user_metadata?.establishment_id || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    setUser(fallbackUser);
+  };
+
   const signIn = async (email: string, password: string) => {
+    console.log("Attempting sign in for:", email);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    // If login successful, immediately fetch user profile to ensure user state is set
+    if (error) {
+      console.error("Sign in error:", error);
+    }
+
+    // If login successful, immediately ensure user profile
     if (!error && data.session?.user) {
-      await fetchUserProfile(data.session.user.id, data.session.user);
+      console.log("Sign in successful, ensuring profile...");
+      await ensureUserProfile(data.session.user);
       setSession(data.session);
     }
 
