@@ -278,7 +278,7 @@ export default function ShopPage() {
                   <SlidersHorizontal className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-80">
+              <SheetContent side="right" className="w-full sm:w-80 border-l-border/50">
                 <div className="space-y-6 mt-6">
                   <h3 className="font-bold text-lg">Filtres</h3>
 

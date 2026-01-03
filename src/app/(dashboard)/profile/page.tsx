@@ -56,17 +56,17 @@ export default function ProfilePage() {
 
       {/* Settings Tabs */}
       <Tabs defaultValue="account" className="w-full">
-        <div className="flex justify-center mb-8">
-          <TabsList className="bg-white border border-border/50 p-1 rounded-full shadow-sm">
-            <TabsTrigger value="account" className="rounded-full px-6 data-[state=active]:bg-accent-yellow data-[state=active]:text-primary">
+        <div className="flex justify-center mb-8 overflow-x-auto pb-2 scrollbar-hide">
+          <TabsList className="bg-white border border-border/50 p-1 rounded-full shadow-sm w-auto inline-flex">
+            <TabsTrigger value="account" className="rounded-full px-4 sm:px-6 data-[state=active]:bg-accent-yellow data-[state=active]:text-primary text-sm sm:text-base whitespace-nowrap">
               <User className="h-4 w-4 mr-2" />
               Compte
             </TabsTrigger>
-            <TabsTrigger value="payment" className="rounded-full px-6 data-[state=active]:bg-accent-green data-[state=active]:text-primary">
+            <TabsTrigger value="payment" className="rounded-full px-4 sm:px-6 data-[state=active]:bg-accent-green data-[state=active]:text-primary text-sm sm:text-base whitespace-nowrap">
               <CreditCard className="h-4 w-4 mr-2" />
               Paiement
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="rounded-full px-6 data-[state=active]:bg-accent-blue data-[state=active]:text-primary">
+            <TabsTrigger value="notifications" className="rounded-full px-4 sm:px-6 data-[state=active]:bg-accent-blue data-[state=active]:text-primary text-sm sm:text-base whitespace-nowrap">
               <Bell className="h-4 w-4 mr-2" />
               Notifications
             </TabsTrigger>

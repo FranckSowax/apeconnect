@@ -70,9 +70,11 @@ const navItems: NavItem[] = [
 function NavItemComponent({
   item,
   isCollapsed,
+  onNavigate,
 }: {
   item: NavItem;
   isCollapsed: boolean;
+  onNavigate?: () => void;
 }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -113,6 +115,7 @@ function NavItemComponent({
               <Link
                 key={child.href}
                 href={child.href}
+                onClick={onNavigate}
                 className={cn(
                   "block rounded-full px-4 py-2 text-sm transition-colors",
                   pathname === child.href
@@ -132,6 +135,7 @@ function NavItemComponent({
   return (
     <Link
       href={item.href}
+      onClick={onNavigate}
       className={cn(
         "flex items-center gap-4 rounded-full px-4 py-3 text-sm font-medium transition-all duration-200 mb-2",
         isActive
@@ -145,7 +149,7 @@ function NavItemComponent({
   );
 }
 
-function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
+export function SidebarContent({ isCollapsed, onNavigate }: { isCollapsed: boolean; onNavigate?: () => void }) {
   const { user, signOut, hasRole } = useAuth();
 
   const filteredNavItems = navItems.filter((item) => {
@@ -157,7 +161,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
     <div className="flex h-full flex-col bg-background/50 backdrop-blur-xl">
       {/* Logo */}
       <div className={cn("flex h-20 items-center px-6", isCollapsed && "justify-center px-2")}>
-        <Link href="/dashboard" className="flex items-center gap-3">
+        <Link href="/dashboard" onClick={onNavigate} className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-accent-yellow flex items-center justify-center shadow-sm">
             <span className="text-primary font-bold text-xl">A</span>
           </div>
@@ -178,6 +182,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               key={item.href}
               item={item}
               isCollapsed={isCollapsed}
+              onNavigate={onNavigate}
             />
           ))}
         </nav>
@@ -212,33 +217,14 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <>
-      {/* Desktop Sidebar */}
-      <aside
-        className={cn(
-          "hidden lg:flex flex-col border-r border-border h-screen sticky top-0 bg-secondary/30 transition-all duration-300",
-          isCollapsed ? "w-20" : "w-72"
-        )}
-      >
-        <SidebarContent isCollapsed={isCollapsed} />
-      </aside>
-
-      {/* Mobile Sidebar */}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden fixed top-4 left-4 z-40 bg-white shadow-sm rounded-full"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-72 p-0 border-r-0 bg-background">
-          <SidebarContent isCollapsed={false} />
-        </SheetContent>
-      </Sheet>
-    </>
+    <aside
+      className={cn(
+        "hidden lg:flex flex-col border-r border-border h-screen sticky top-0 bg-secondary/30 transition-all duration-300",
+        isCollapsed ? "w-20" : "w-72"
+      )}
+    >
+      <SidebarContent isCollapsed={isCollapsed} />
+    </aside>
   );
 }
 

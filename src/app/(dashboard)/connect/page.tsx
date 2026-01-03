@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function ConnectPage() {
   return (
-    <div className="space-y-8 h-[calc(100vh-8rem)] flex flex-col">
+    <div className="space-y-8 lg:h-[calc(100vh-8rem)] h-auto flex flex-col">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 flex-shrink-0">
         <div>
@@ -28,14 +28,14 @@ export default function ConnectPage() {
       </div>
 
       {/* Split Screen Content */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
+      <div className="lg:flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:min-h-0">
         {/* Left Side: Recent Absences */}
-        <div className="h-full">
+        <div className="lg:h-full h-auto">
           <RecentAbsences />
         </div>
 
         {/* Right Side: Automatic Reports */}
-        <div className="h-full">
+        <div className="lg:h-full h-auto">
           <AutomaticReports />
         </div>
       </div>

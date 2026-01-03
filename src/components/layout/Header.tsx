@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEstablishment } from "@/contexts/EstablishmentContext";
 import { Button } from "@/components/ui/button";
@@ -19,13 +20,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Bell, Search, User, Settings, LogOut } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Bell, Search, User, Settings, LogOut, Menu } from "lucide-react";
 import Link from "next/link";
+import { SidebarContent } from "./Sidebar";
 
 export function Header() {
   const { user, signOut, isSuperAdmin } = useAuth();
   const { currentEstablishment, establishments, setCurrentEstablishment } =
     useEstablishment();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const initials = user?.full_name
     ?.split(" ")
@@ -34,9 +38,26 @@ export function Header() {
     .toUpperCase() || user?.email?.[0]?.toUpperCase() || "U";
 
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-border/50 bg-white/80 backdrop-blur-md px-6 shadow-sm">
+    <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-border/50 bg-white/80 backdrop-blur-md px-4 sm:px-6 shadow-sm">
+      {/* Mobile Menu Trigger */}
+      <div className="lg:hidden">
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="bg-white shadow-sm rounded-full">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-72 p-0 border-r-0 bg-background">
+            <SidebarContent 
+              isCollapsed={false} 
+              onNavigate={() => setIsMobileMenuOpen(false)} 
+            />
+          </SheetContent>
+        </Sheet>
+      </div>
+
       {/* Search */}
-      <div className="flex-1 lg:ml-0 ml-12">
+      <div className="flex-1">
         <div className="relative max-w-md">
           <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input

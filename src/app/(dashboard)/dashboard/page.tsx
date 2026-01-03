@@ -289,11 +289,11 @@ export default function DashboardPage() {
 
           <CardContent className="px-6 pb-6">
             {/* Schedule Header */}
-            <div className="grid grid-cols-4 gap-2 text-xs text-muted-foreground font-medium mt-4 mb-3 px-2">
-              <span>Heure</span>
-              <span>Action</span>
-              <span>Par</span>
-              <span>Détail</span>
+            <div className="flex items-center justify-between text-xs text-muted-foreground font-medium mt-4 mb-3 px-2">
+              <span className="w-16">Heure</span>
+              <span className="flex-1">Matière</span>
+              <span className="hidden sm:block w-32">Professeur</span>
+              <span className="w-20 text-right">Salle</span>
             </div>
 
             {/* Schedule Items */}
@@ -301,21 +301,26 @@ export default function DashboardPage() {
               {todaySchedule.map((item, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-4 gap-2 items-center p-3 rounded-xl hover:bg-secondary/20 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-secondary/20 transition-colors gap-2"
                 >
-                  <span className="text-sm font-medium text-foreground">{item.time}</span>
-                  <span className="text-sm text-foreground truncate">{item.lesson}</span>
-                  <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-foreground w-16">{item.time}</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm text-foreground truncate block">{item.lesson}</span>
+                    <span className="text-xs text-muted-foreground sm:hidden block truncate">{item.teacher}</span>
+                  </div>
+                  <div className="hidden sm:flex items-center gap-2 w-32">
                     <Avatar className="h-6 w-6">
                       <AvatarFallback className="bg-secondary text-xs">
                         {item.teacher.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-xs text-muted-foreground truncate hidden sm:block">
+                    <span className="text-xs text-muted-foreground truncate">
                       {item.teacher}
                     </span>
                   </div>
-                  <span className="text-xs text-muted-foreground truncate">{item.location}</span>
+                  <span className="text-xs text-muted-foreground truncate w-20 text-right bg-secondary/30 px-2 py-1 rounded-md">
+                    {item.location}
+                  </span>
                 </div>
               ))}
             </div>
