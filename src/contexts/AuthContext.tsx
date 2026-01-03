@@ -29,18 +29,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const supabase = createClient();
 
   useEffect(() => {
+    let mounted = true;
+
+    // Safety timeout to prevent infinite loading
+    const safetyTimeout = setTimeout(() => {
+      if (mounted && loading) {
+        console.warn("Auth loading timed out, forcing loading to false");
+        setLoading(false);
+      }
+    }, 5000); // 5 seconds timeout
+
     // Get initial session
     const getInitialSession = async () => {
       try {
+        console.log("Getting initial session...");
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error) {
           console.error("Error getting session:", error);
-          setLoading(false);
+          if (mounted) setLoading(false);
           return;
         }
 
-        setSession(session);
+        console.log("Session retrieved:", session ? "Found" : "Null");
+        if (mounted) setSession(session);
 
         if (session?.user) {
           await fetchUserProfile(session.user.id, session.user);
@@ -48,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (err) {
         console.error("Error in getInitialSession:", err);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
@@ -57,6 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, session: Session | null) => {
+        console.log("Auth state change:", event);
+        if (!mounted) return;
+        
         try {
           setSession(session);
 
@@ -68,12 +83,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } catch (err) {
           console.error("Error in onAuthStateChange:", err);
         } finally {
-          setLoading(false);
+          if (mounted) setLoading(false);
         }
       }
     );
 
     return () => {
+      mounted = false;
+      clearTimeout(safetyTimeout);
       subscription.unsubscribe();
     };
   }, []);

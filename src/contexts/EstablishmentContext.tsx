@@ -55,7 +55,32 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    fetchEstablishments();
+    let mounted = true;
+
+    // Safety timeout
+    const safetyTimeout = setTimeout(() => {
+      if (mounted && loading) {
+        console.warn("Establishment loading timed out, forcing loading to false");
+        setLoading(false);
+      }
+    }, 5000);
+
+    const loadData = async () => {
+      try {
+        await fetchEstablishments();
+      } catch (err) {
+        console.error("Error in loadData:", err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    loadData();
+
+    return () => {
+      mounted = false;
+      clearTimeout(safetyTimeout);
+    };
   }, []);
 
   return (
