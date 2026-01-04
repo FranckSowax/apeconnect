@@ -174,19 +174,19 @@ export default function HomePage() {
       answer: "Oui. Nous utilisons Supabase avec chiffrement SSL et authentification sécurisée. Vos données ne sont jamais partagées avec des tiers.",
     },
     {
-      question: "L'application est-elle gratuite ?",
-      answer: "Oui, APE Connect est entièrement gratuit pour les parents. Aucun frais caché, aucun abonnement. Seules les mensualités APE de votre établissement restent à votre charge.",
+      question: "Combien coûte l'application ?",
+      answer: "L'abonnement APE Connect est de 1.000 FCFA par mois et par famille. Ce tarif unique vous donne accès à toutes les fonctionnalités : absences, discussions, boutique et notifications.",
     },
   ];
 
   const pricing = [
     {
       name: "Parents",
-      price: "0",
-      description: "Gratuit pour tous les parents",
+      price: "1.000",
+      description: "Par mois et par famille",
       features: ["Déclaration d'absences illimitée", "Discussions de classe", "Accès à la boutique", "Notifications WhatsApp", "Suivi des mensualités"],
       cta: "Créer mon compte",
-      popular: false,
+      popular: true,
     },
     {
       name: "Établissement",
@@ -194,7 +194,7 @@ export default function HomePage() {
       description: "Pour les écoles et lycées",
       features: ["Dashboard administration", "Gestion multi-classes", "Validation des absences", "Annonces et communications", "Support prioritaire"],
       cta: "Nous contacter",
-      popular: true,
+      popular: false,
     },
   ];
 
@@ -607,10 +607,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 mb-4">
-              Tarification simple et transparente
+              Un tarif unique, toutes les fonctionnalités
             </h2>
             <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
-              Gratuit pour les parents, sur mesure pour les établissements.
+              1.000 FCFA/mois par famille. Établissements : contactez-nous pour un devis personnalisé.
             </p>
           </div>
 
