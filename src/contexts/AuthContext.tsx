@@ -51,9 +51,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUserProfile = useCallback(async (supabaseUser: SupabaseUser): Promise<User> => {
     console.log("[AUTH] fetchUserProfile called for user:", supabaseUser.id);
+
+    // Create fallback user from metadata
+    const fallbackUser: User = {
+      id: supabaseUser.id,
+      email: supabaseUser.email || "",
+      full_name: supabaseUser.user_metadata?.full_name || null,
+      role: (supabaseUser.user_metadata?.role as UserRole) || "parent",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      establishment_id: supabaseUser.user_metadata?.establishment_id || null,
+      phone: supabaseUser.user_metadata?.phone || null,
+      phone_verified: false,
+      avatar_url: null,
+    };
+
     try {
       console.log("[AUTH] Fetching user profile from database...");
-      const { data, error } = await supabase
+
+      // Add timeout to prevent infinite hang
+      const timeoutPromise = new Promise<null>((_, reject) =>
+        setTimeout(() => reject(new Error("Profile fetch timeout")), 5000)
+      );
+
+      const fetchPromise = supabase
         .from("users")
         .select(`
           *,
@@ -62,22 +83,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq("id", supabaseUser.id)
         .single();
 
+      const result = await Promise.race([fetchPromise, timeoutPromise]);
+
+      if (!result) {
+        console.warn("[AUTH] Profile fetch timed out, using fallback");
+        return fallbackUser;
+      }
+
+      const { data, error } = result;
+
       if (error) {
         console.error("[AUTH] Error fetching user profile:", error);
         console.log("[AUTH] Returning fallback user data");
-        // Fallback to basic user data if profile fetch fails
-        return {
-          id: supabaseUser.id,
-          email: supabaseUser.email || "",
-          full_name: supabaseUser.user_metadata?.full_name || null,
-          role: (supabaseUser.user_metadata?.role as UserRole) || "parent",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          establishment_id: null,
-          phone: null,
-          phone_verified: false,
-          avatar_url: null,
-        } as User;
+        return fallbackUser;
       }
 
       console.log("[AUTH] User profile fetched successfully:", data);
@@ -85,19 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("[AUTH] Unexpected error fetching profile:", err);
       console.log("[AUTH] Returning fallback user data due to exception");
-      // Return fallback user even on exception
-      return {
-        id: supabaseUser.id,
-        email: supabaseUser.email || "",
-        full_name: supabaseUser.user_metadata?.full_name || null,
-        role: (supabaseUser.user_metadata?.role as UserRole) || "parent",
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        establishment_id: null,
-        phone: null,
-        phone_verified: false,
-        avatar_url: null,
-      } as User;
+      return fallbackUser;
     }
   }, [supabase]);
 

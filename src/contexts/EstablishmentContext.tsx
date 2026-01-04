@@ -40,10 +40,30 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
     console.log("[ESTABLISHMENT] fetchEstablishments called");
     try {
       console.log("[ESTABLISHMENT] Fetching establishments from database...");
-      const { data, error } = await supabase
+
+      // Add timeout to prevent infinite hang
+      const timeoutPromise = new Promise<null>((resolve) =>
+        setTimeout(() => {
+          console.warn("[ESTABLISHMENT] Fetch timed out");
+          resolve(null);
+        }, 5000)
+      );
+
+      const fetchPromise = supabase
         .from("establishments")
         .select("*")
         .order("name");
+
+      const result = await Promise.race([fetchPromise, timeoutPromise]);
+
+      if (!result) {
+        console.warn("[ESTABLISHMENT] Fetch timed out, setting empty list");
+        setEstablishments([]);
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = result;
 
       if (error) {
         console.error("[ESTABLISHMENT] Error fetching establishments:", error);
