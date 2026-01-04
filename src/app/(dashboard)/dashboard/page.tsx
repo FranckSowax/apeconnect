@@ -286,7 +286,7 @@ export default function DashboardPage() {
         <Card className="xl:col-span-2 border-0 shadow-sm rounded-[32px] bg-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-xl font-bold text-[#062F28]">Présence & Résultats</CardTitle>
+              <CardTitle className="text-xl font-bold text-[#062F28]">Présence & Absences</CardTitle>
               <p className="text-sm text-muted-foreground">Année scolaire 2024-2025</p>
             </div>
             <div className="flex gap-2">
