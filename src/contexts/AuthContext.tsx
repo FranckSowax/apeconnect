@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode, useCallback, useRef } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode, useCallback, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User as SupabaseUser, Session, AuthChangeEvent } from "@supabase/supabase-js";
 import type { User, UserRole } from "@/types";
@@ -24,24 +24,37 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Create supabase client outside component to ensure stable reference
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient();
+  }
+  return supabaseInstance;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
-  // Use a ref to track the current user ID for the auth listener closure
-  // This avoids adding 'user' to the dependency array which would cause re-subscription loops
+  const [initialized, setInitialized] = useState(false);
+
+  // Stable supabase reference
+  const supabase = useMemo(() => getSupabase(), []);
+
+  // Track current user ID and prevent duplicate fetches
   const userIdRef = useRef<string | undefined>(undefined);
+  const isFetchingRef = useRef(false);
 
   useEffect(() => {
-    if (user?.id) {
-      userIdRef.current = user.id;
-    } else {
-      userIdRef.current = undefined;
-    }
-  }, [user]);
+    userIdRef.current = user?.id;
+  }, [user?.id]);
 
-  const fetchUserProfile = useCallback(async (supabaseUser: SupabaseUser) => {
+  const fetchUserProfile = useCallback(async (supabaseUser: SupabaseUser): Promise<User | null> => {
+    // Prevent concurrent fetches
+    if (isFetchingRef.current) return null;
+    isFetchingRef.current = true;
+
     try {
       const { data, error } = await supabase
         .from("users")
@@ -73,6 +86,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("Unexpected error fetching profile:", err);
       return null;
+    } finally {
+      isFetchingRef.current = false;
     }
   }, [supabase]);
 
@@ -83,24 +98,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [session, fetchUserProfile]);
 
   useEffect(() => {
+    // Prevent re-initialization
+    if (initialized) return;
+
     let mounted = true;
 
     const initializeAuth = async () => {
       try {
-        // 1. Get initial session
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-        
+
         if (error) throw error;
 
         if (mounted) {
           setSession(initialSession);
           if (initialSession?.user) {
             const profile = await fetchUserProfile(initialSession.user);
-            if (mounted) setUser(profile);
+            if (mounted && profile) setUser(profile);
           }
+          setInitialized(true);
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
+        if (mounted) setInitialized(true);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -108,30 +127,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initializeAuth();
 
-    // 2. Listen for auth changes
+    // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, newSession: Session | null) => {
         if (!mounted) return;
+
+        // Skip INITIAL_SESSION as we handle it above
+        if (event === 'INITIAL_SESSION') return;
 
         console.log("Auth state changed:", event);
         setSession(newSession);
 
         if (newSession?.user) {
-          // Only fetch profile if user changed or on explicit sign in
-          // Use the ref to check against current user without stale closure
-          if (
-            event === 'SIGNED_IN' || 
-            event === 'TOKEN_REFRESHED' || 
-            !userIdRef.current || 
-            userIdRef.current !== newSession.user.id
-          ) {
+          // Only fetch profile if user changed or on sign in
+          if (event === 'SIGNED_IN' || userIdRef.current !== newSession.user.id) {
             const profile = await fetchUserProfile(newSession.user);
-            if (mounted) setUser(profile);
+            if (mounted && profile) setUser(profile);
           }
         } else {
           setUser(null);
         }
-        
+
         setLoading(false);
       }
     );
@@ -140,9 +156,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase, fetchUserProfile]);
+  }, [supabase, fetchUserProfile, initialized]);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string) => {
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -155,9 +171,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Sign in error:", error);
       return { error: error as Error };
     }
-  };
+  }, [supabase]);
 
-  const signUp = async (email: string, password: string, metadata?: Record<string, unknown>) => {
+  const signUp = useCallback(async (email: string, password: string, metadata?: Record<string, unknown>) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -171,9 +187,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       return { error: error as Error };
     }
-  };
+  }, [supabase]);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       await supabase.auth.signOut();
       setUser(null);
@@ -183,9 +199,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Sign out error:", error);
       toast.error("Erreur lors de la déconnexion");
     }
-  };
+  }, [supabase]);
 
-  const signInWithOAuth = async (provider: "google" | "apple") => {
+  const signInWithOAuth = useCallback(async (provider: "google" | "apple") => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
@@ -193,49 +209,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
     });
     return { error: error ? (error as Error) : null };
-  };
+  }, [supabase]);
 
-  const resetPassword = async (email: string) => {
+  const resetPassword = useCallback(async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     });
     return { error: error ? (error as Error) : null };
-  };
+  }, [supabase]);
 
-  const updatePassword = async (newPassword: string) => {
+  const updatePassword = useCallback(async (newPassword: string) => {
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     });
     return { error: error ? (error as Error) : null };
-  };
+  }, [supabase]);
 
-  const hasRole = (roles: UserRole | UserRole[]): boolean => {
+  const hasRole = useCallback((roles: UserRole | UserRole[]): boolean => {
     if (!user) return false;
     const roleArray = Array.isArray(roles) ? roles : [roles];
     return roleArray.includes(user.role);
-  };
+  }, [user]);
 
   const isAdmin = user?.role === "admin" || user?.role === "super_admin";
   const isSuperAdmin = user?.role === "super_admin";
 
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    user,
+    session,
+    loading,
+    signIn,
+    signUp,
+    signOut,
+    signInWithOAuth,
+    resetPassword,
+    updatePassword,
+    hasRole,
+    isAdmin,
+    isSuperAdmin,
+    refreshProfile,
+  }), [user, session, loading, signIn, signUp, signOut, signInWithOAuth, resetPassword, updatePassword, hasRole, isAdmin, isSuperAdmin, refreshProfile]);
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        session,
-        loading,
-        signIn,
-        signUp,
-        signOut,
-        signInWithOAuth,
-        resetPassword,
-        updatePassword,
-        hasRole,
-        isAdmin,
-        isSuperAdmin,
-        refreshProfile,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

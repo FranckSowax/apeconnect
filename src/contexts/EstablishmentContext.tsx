@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef, type ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Establishment } from "@/types";
 
@@ -16,13 +16,34 @@ const EstablishmentContext = createContext<EstablishmentContextType | undefined>
 
 const STORAGE_KEY = "ape_connect_establishment_id";
 
+// Create supabase client outside component to ensure stable reference
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient();
+  }
+  return supabaseInstance;
+}
+
 export function EstablishmentProvider({ children }: { children: ReactNode }) {
   const [currentEstablishment, setCurrentEstablishmentState] = useState<Establishment | null>(null);
   const [establishments, setEstablishments] = useState<Establishment[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const [initialized, setInitialized] = useState(false);
+
+  // Stable supabase reference
+  const supabase = useMemo(() => getSupabase(), []);
+
+  // Prevent duplicate fetches
+  const isFetchingRef = useRef(false);
 
   const fetchEstablishments = useCallback(async () => {
+    // Prevent duplicate fetches
+    if (isFetchingRef.current) {
+      return;
+    }
+    isFetchingRef.current = true;
+
     try {
       const { data, error } = await supabase
         .from("establishments")
@@ -56,30 +77,40 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
       console.error("Unexpected error in fetchEstablishments:", err);
     } finally {
       setLoading(false);
+      isFetchingRef.current = false;
     }
   }, [supabase]);
 
-  const setCurrentEstablishment = (establishment: Establishment) => {
+  const setCurrentEstablishment = useCallback((establishment: Establishment) => {
     setCurrentEstablishmentState(establishment);
     if (typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, establishment.id);
     }
-  };
+  }, []);
 
+  // Initialize only once
   useEffect(() => {
+    if (initialized) {
+      return;
+    }
+    setInitialized(true);
     fetchEstablishments();
-  }, [fetchEstablishments]);
+  }, [initialized, fetchEstablishments]);
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({
+      currentEstablishment,
+      establishments,
+      loading,
+      setCurrentEstablishment,
+      fetchEstablishments,
+    }),
+    [currentEstablishment, establishments, loading, setCurrentEstablishment, fetchEstablishments]
+  );
 
   return (
-    <EstablishmentContext.Provider
-      value={{
-        currentEstablishment,
-        establishments,
-        loading,
-        setCurrentEstablishment,
-        fetchEstablishments,
-      }}
-    >
+    <EstablishmentContext.Provider value={contextValue}>
       {children}
     </EstablishmentContext.Provider>
   );
