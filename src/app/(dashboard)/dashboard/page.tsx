@@ -28,7 +28,6 @@ import {
   Eye,
   Heart,
   ArrowUpRight,
-  ArrowDownLeft,
   MoreHorizontal,
   Search,
   Mic,
@@ -183,25 +182,16 @@ export default function DashboardPage() {
           <CardContent className="p-6 h-full flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-start mb-4">
-                <span className="text-[#062F28] font-medium text-sm bg-white/30 px-3 py-1 rounded-full">Solde APE</span>
-                <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-white/30 text-[#062F28] hover:bg-white/40">
-                  <Plus className="h-4 w-4" />
-                </Button>
+                <span className="text-[#062F28] font-medium text-sm bg-white/30 px-3 py-1 rounded-full">Prochaine Mensualité</span>
               </div>
-              <h2 className="text-[#062F28] text-4xl font-bold font-hagrid mb-1">20.670 <span className="text-xl">FCFA</span></h2>
-              <p className="text-[#062F28]/70 text-sm mb-6">+2.5% vs mois dernier</p>
+              <h2 className="text-[#062F28] text-4xl font-bold font-hagrid mb-1">1.000 <span className="text-xl">FCFA</span></h2>
+              <p className="text-[#062F28]/70 text-sm mb-6">Échéance : 15 Février 2025</p>
             </div>
-            
-            <div className="flex gap-3">
-              <Button className="flex-1 bg-white text-[#062F28] hover:bg-white/90 rounded-full font-bold h-12 shadow-sm border-0">
-                <ArrowDownLeft className="mr-2 h-4 w-4" />
-                Recharger
-              </Button>
-              <Button className="flex-1 bg-[#062F28] text-white hover:bg-[#062F28]/90 rounded-full font-bold h-12 shadow-sm border-0">
-                Payer
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
+
+            <Button className="w-full bg-[#062F28] text-white hover:bg-[#062F28]/90 rounded-full font-bold h-12 shadow-sm border-0">
+              Payer
+              <ArrowUpRight className="ml-2 h-4 w-4" />
+            </Button>
 
             {/* Decorative background curves */}
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-2xl pointer-events-none" />
