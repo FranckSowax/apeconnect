@@ -17,7 +17,9 @@ import {
   HelpCircle,
   Sparkles,
   Users, // Children
+  MessageSquare, // Discussions
 } from "lucide-react";
+import { useUnreadCount } from "@/hooks/useUnreadCount";
 
 interface NavItem {
   title: string;
@@ -25,6 +27,7 @@ interface NavItem {
   icon: React.ElementType;
   roles?: string[];
   color?: string;
+  badge?: "unread"; // Special badge type
   children?: { title: string; href: string }[];
 }
 
@@ -49,6 +52,12 @@ const navItems: NavItem[] = [
       { title: "Absences", href: "/connect/new" },
       { title: "Bulletins", href: "/connect/history" },
     ],
+  },
+  {
+    title: "Discussions",
+    href: "/discussions",
+    icon: MessageSquare,
+    badge: "unread",
   },
   {
     title: "Boutique", // Shop
@@ -80,15 +89,18 @@ function NavItemComponent({
   item,
   isCollapsed,
   onNavigate,
+  unreadCount = 0,
 }: {
   item: NavItem;
   isCollapsed: boolean;
   onNavigate?: () => void;
+  unreadCount?: number;
 }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const isActive = pathname === item.href || (pathname.startsWith(item.href + "/") && item.href !== "/dashboard"); // Avoid matching /dashboard for everything
   const hasChildren = item.children && item.children.length > 0;
+  const showBadge = item.badge === "unread" && unreadCount > 0;
 
   if (hasChildren) {
     return (
@@ -143,20 +155,35 @@ function NavItemComponent({
       href={item.href}
       onClick={onNavigate}
       className={cn(
-        "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 mb-1",
+        "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 mb-1 relative",
         isActive
           ? "bg-white text-foreground shadow-sm ring-1 ring-black/5"
           : "text-muted-foreground hover:bg-black/5 hover:text-foreground"
       )}
     >
-      <item.icon className={cn("h-5 w-5", isActive ? "text-primary" : "text-muted-foreground")} />
-      {!isCollapsed && <span>{item.title}</span>}
+      <div className="relative">
+        <item.icon className={cn("h-5 w-5", isActive ? "text-primary" : "text-muted-foreground")} />
+        {showBadge && isCollapsed && (
+          <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full" />
+        )}
+      </div>
+      {!isCollapsed && (
+        <>
+          <span className="flex-1">{item.title}</span>
+          {showBadge && (
+            <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold text-white bg-red-500 rounded-full">
+              {unreadCount > 99 ? "99+" : unreadCount}
+            </span>
+          )}
+        </>
+      )}
     </Link>
   );
 }
 
 export function SidebarContent({ isCollapsed, onNavigate }: { isCollapsed: boolean; onNavigate?: () => void }) {
-  const { user, signOut, hasRole } = useAuth();
+  const { hasRole } = useAuth();
+  const { count: unreadCount } = useUnreadCount();
 
   const filteredNavItems = navItems.filter((item) => {
     if (!item.roles) return true;
@@ -187,6 +214,7 @@ export function SidebarContent({ isCollapsed, onNavigate }: { isCollapsed: boole
                 item={item}
                 isCollapsed={isCollapsed}
                 onNavigate={onNavigate}
+                unreadCount={item.badge === "unread" ? unreadCount : 0}
               />
             ))}
           </nav>
