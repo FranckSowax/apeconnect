@@ -41,7 +41,7 @@ export function Header() {
     .toUpperCase() || user?.email?.[0]?.toUpperCase() || "U";
 
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center gap-4 bg-[#F9FAFB]/80 backdrop-blur-md px-4 sm:px-6 z-20">
+    <header className="sticky top-0 z-20 flex h-20 items-center gap-4 bg-[#F9FAFB]/80 backdrop-blur-md px-4 sm:px-6">
       {/* Mobile Menu Trigger */}
       <div className="lg:hidden">
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
