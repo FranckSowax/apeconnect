@@ -5,9 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Store, // Marketplace
   Activity, // Connect
@@ -15,7 +13,6 @@ import {
   ChevronDown,
   LayoutDashboard,
   HelpCircle,
-  Sparkles,
   Users, // Children
   MessageSquare, // Discussions
 } from "lucide-react";
@@ -50,7 +47,7 @@ const navItems: NavItem[] = [
     children: [
       { title: "Vue d'ensemble", href: "/connect" },
       { title: "Absences", href: "/connect/new" },
-      { title: "Bulletins", href: "/connect/history" },
+      { title: "Historique", href: "/connect/history" },
     ],
   },
   {
@@ -234,24 +231,6 @@ export function SidebarContent({ isCollapsed, onNavigate }: { isCollapsed: boole
           </nav>
         </div>
       </ScrollArea>
-
-      {/* Upgrade Plan Card */}
-      {!isCollapsed && (
-        <div className="p-4 mx-4 mb-4 bg-white rounded-2xl shadow-sm border border-border">
-          <div className="flex justify-center mb-3">
-            <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-              <Sparkles className="h-5 w-5" />
-            </div>
-          </div>
-          <h4 className="text-center font-bold text-foreground mb-1">Pass Premium</h4>
-          <p className="text-center text-xs text-muted-foreground mb-3">
-            Accédez à toutes les fonctionnalités et au support prioritaire.
-          </p>
-          <Button className="w-full bg-primary hover:bg-primary/90 text-white rounded-full text-xs font-bold h-9">
-            Mettre à niveau <ChevronDown className="ml-1 h-3 w-3 -rotate-90" />
-          </Button>
-        </div>
-      )}
     </div>
   );
 }
