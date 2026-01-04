@@ -319,20 +319,6 @@ export default function HomePage() {
                 className="object-cover hover:scale-105 transition-transform duration-700"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-              <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8">
-                <div className="bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg max-w-xs border-l-4 border-amber-500">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
-                      <CheckCircle2 className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-zinc-900">Cotisation réglée</p>
-                      <p className="text-xs text-zinc-500">Reçu envoyé par SMS</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
