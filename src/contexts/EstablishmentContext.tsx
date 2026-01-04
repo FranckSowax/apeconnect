@@ -29,21 +29,14 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
   const [currentEstablishment, setCurrentEstablishmentState] = useState<Establishment | null>(null);
   const [establishments, setEstablishments] = useState<Establishment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
 
   // Stable supabase reference
   const supabase = useMemo(() => getSupabase(), []);
 
-  // Prevent duplicate fetches
-  const isFetchingRef = useRef(false);
+  // Prevent re-initialization using ref (survives re-renders)
+  const initializedRef = useRef(false);
 
   const fetchEstablishments = useCallback(async () => {
-    // Prevent duplicate fetches
-    if (isFetchingRef.current) {
-      return;
-    }
-    isFetchingRef.current = true;
-
     try {
       const { data, error } = await supabase
         .from("establishments")
@@ -52,6 +45,7 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         console.error("Error fetching establishments:", error);
+        setLoading(false);
         return;
       }
 
@@ -77,7 +71,6 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
       console.error("Unexpected error in fetchEstablishments:", err);
     } finally {
       setLoading(false);
-      isFetchingRef.current = false;
     }
   }, [supabase]);
 
@@ -88,14 +81,12 @@ export function EstablishmentProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Initialize only once
+  // Initialize only once using ref
   useEffect(() => {
-    if (initialized) {
-      return;
-    }
-    setInitialized(true);
+    if (initializedRef.current) return;
+    initializedRef.current = true;
     fetchEstablishments();
-  }, [initialized, fetchEstablishments]);
+  }, [fetchEstablishments]);
 
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo(

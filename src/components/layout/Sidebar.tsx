@@ -183,10 +183,10 @@ export function SidebarContent({ isCollapsed, onNavigate }: { isCollapsed: boole
       <div className={cn("flex h-20 items-center px-6", isCollapsed && "justify-center px-2")}>
         <Link href="/dashboard" onClick={onNavigate} className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-            <span className="text-white font-bold text-lg font-hagrid">F</span>
+            <span className="text-white font-bold text-lg font-hagrid">A</span>
           </div>
           {!isCollapsed && (
-            <span className="font-hagrid font-bold text-xl text-foreground">Fynix</span>
+            <span className="font-hagrid font-bold text-xl text-foreground">APE Connect</span>
           )}
         </Link>
       </div>
@@ -238,16 +238,6 @@ export function SidebarContent({ isCollapsed, onNavigate }: { isCollapsed: boole
           </Button>
         </div>
       )}
-
-      {/* User Logout (Simplified) */}
-      {/* Keeping it simple or integrating into header as per Fynix design which has User in Header usually, 
-          but design shows "Jenny Wilson" at top of sidebar in a dropdown? 
-          Actually Image 2 shows "Jenny Wilson" at the TOP of the Sidebar. 
-          Let's move User Profile to TOP if possible? 
-          No, the Logo is at the top left "Fynix".
-          Below "Fynix" is "Jenny Wilson" dropdown.
-          Let's adjust.
-      */}
     </div>
   );
 }

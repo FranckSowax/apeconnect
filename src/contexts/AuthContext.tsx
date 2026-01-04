@@ -37,24 +37,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
 
   // Stable supabase reference
   const supabase = useMemo(() => getSupabase(), []);
 
-  // Track current user ID and prevent duplicate fetches
+  // Track initialization state and current user ID
+  const initializedRef = useRef(false);
   const userIdRef = useRef<string | undefined>(undefined);
-  const isFetchingRef = useRef(false);
 
   useEffect(() => {
     userIdRef.current = user?.id;
   }, [user?.id]);
 
-  const fetchUserProfile = useCallback(async (supabaseUser: SupabaseUser): Promise<User | null> => {
-    // Prevent concurrent fetches
-    if (isFetchingRef.current) return null;
-    isFetchingRef.current = true;
-
+  const fetchUserProfile = useCallback(async (supabaseUser: SupabaseUser): Promise<User> => {
     try {
       const { data, error } = await supabase
         .from("users")
@@ -85,21 +80,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return data as User;
     } catch (err) {
       console.error("Unexpected error fetching profile:", err);
-      return null;
-    } finally {
-      isFetchingRef.current = false;
+      // Return fallback user even on exception
+      return {
+        id: supabaseUser.id,
+        email: supabaseUser.email || "",
+        full_name: supabaseUser.user_metadata?.full_name || null,
+        role: (supabaseUser.user_metadata?.role as UserRole) || "parent",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        establishment_id: null,
+        phone: null,
+        phone_verified: false,
+        avatar_url: null,
+      } as User;
     }
   }, [supabase]);
 
   const refreshProfile = useCallback(async () => {
     if (!session?.user) return;
     const profile = await fetchUserProfile(session.user);
-    if (profile) setUser(profile);
+    setUser(profile);
   }, [session, fetchUserProfile]);
 
   useEffect(() => {
-    // Prevent re-initialization
-    if (initialized) return;
+    // Prevent re-initialization using ref (survives re-renders)
+    if (initializedRef.current) return;
+    initializedRef.current = true;
 
     let mounted = true;
 
@@ -107,20 +113,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error getting session:", error);
+          if (mounted) setLoading(false);
+          return;
+        }
 
         if (mounted) {
           setSession(initialSession);
           if (initialSession?.user) {
             const profile = await fetchUserProfile(initialSession.user);
-            if (mounted && profile) setUser(profile);
+            if (mounted) setUser(profile);
           }
-          setInitialized(true);
+          setLoading(false);
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
-        if (mounted) setInitialized(true);
-      } finally {
         if (mounted) setLoading(false);
       }
     };
@@ -142,7 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Only fetch profile if user changed or on sign in
           if (event === 'SIGNED_IN' || userIdRef.current !== newSession.user.id) {
             const profile = await fetchUserProfile(newSession.user);
-            if (mounted && profile) setUser(profile);
+            if (mounted) setUser(profile);
           }
         } else {
           setUser(null);
@@ -156,7 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase, fetchUserProfile, initialized]);
+  }, [supabase, fetchUserProfile]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     try {
