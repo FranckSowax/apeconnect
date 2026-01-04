@@ -11,17 +11,11 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Store, // Marketplace
   Activity, // Connect
-  User, // Profile
   Settings,
-  LogOut,
-  Menu,
   ChevronDown,
   LayoutDashboard,
   HelpCircle,
   Sparkles,
-  Wallet,
-  FileText,
-  PieChart
 } from "lucide-react";
 
 interface NavItem {
@@ -53,21 +47,6 @@ const navItems: NavItem[] = [
     title: "Boutique", // Shop
     href: "/shop",
     icon: Store,
-  },
-  {
-    title: "Mon Portefeuille",
-    href: "/wallet",
-    icon: Wallet,
-  },
-  {
-    title: "Factures",
-    href: "/invoices",
-    icon: FileText,
-  },
-  {
-    title: "Rapports",
-    href: "/reports",
-    icon: PieChart,
   },
   {
     title: "Admin",
