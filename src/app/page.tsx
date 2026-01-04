@@ -19,11 +19,9 @@ import {
   Star,
   Menu,
   X,
-  QrCode,
   Smartphone,
   ShoppingBag,
   Wallet,
-  BookOpen,
   Megaphone,
   BarChart3,
   Play,
@@ -62,20 +60,20 @@ export default function HomePage() {
   const painPoints = [
     {
       icon: MessageSquareOff,
-      title: "Messages noyés",
-      description: "Les informations vitales disparaissent sous des centaines de messages \"Merci\" et \"Bonjour\" dans les groupes de classe.",
+      title: "Absences non signalées",
+      description: "Impossible de justifier rapidement une absence. Les papiers se perdent, les délais passent, et votre enfant est pénalisé.",
       color: "bg-red-50 text-red-500",
     },
     {
       icon: EyeOff,
-      title: "Manque de visibilité",
-      description: "Impossible de savoir si votre enfant est bien arrivé, s'il a des devoirs ou si une réunion a été programmée.",
+      title: "Communication éclatée",
+      description: "WhatsApp, SMS, carnets... Les informations de l'école arrivent de partout et se perdent facilement.",
       color: "bg-orange-50 text-orange-500",
     },
     {
       icon: Coins,
-      title: "Suivi financier opaque",
-      description: "Les cotisations en espèces ou via différents numéros Mobile Money sont difficiles à tracer et à justifier.",
+      title: "Mensualités opaques",
+      description: "Difficile de suivre les paiements APE, les échéances et les reçus quand tout se fait en espèces.",
       color: "bg-yellow-50 text-yellow-600",
     },
   ];
@@ -83,118 +81,118 @@ export default function HomePage() {
   const features = [
     {
       icon: BarChart3,
-      title: "APE+ Suivi",
-      description: "Absences, retards, incidents et notes. Accédez aux données de vie scolaire en temps réel pour mieux accompagner votre enfant.",
-      badge: null,
+      title: "Vie Scolaire",
+      description: "Déclarez les absences en ligne, suivez leur statut en temps réel et recevez une notification dès validation par l'établissement.",
+      badge: "Essentiel",
+    },
+    {
+      icon: Megaphone,
+      title: "Discussions de Classe",
+      description: "Un groupe de discussion par classe. Échangez avec les autres parents, recevez les annonces importantes des professeurs.",
+      badge: "Nouveau",
     },
     {
       icon: ShoppingBag,
-      title: "APE+ Shop",
-      description: "Achetez, vendez, donnez : manuels scolaires, uniformes ou fournitures. Le marché solidaire exclusif aux parents.",
+      title: "Boutique Solidaire",
+      description: "Achetez, vendez ou donnez : manuels scolaires, uniformes, fournitures. Le marché exclusif entre parents de l'établissement.",
       badge: "Populaire",
     },
     {
       icon: Wallet,
-      title: "APE+ Caisse",
-      description: "Gérez les cotisations en toute transparence. Paiements sécurisés via Airtel Money ou Moov Money directement dans l'app.",
-      badge: null,
-    },
-    {
-      icon: Megaphone,
-      title: "APE+ Com",
-      description: "Canal officiel de l'école et de l'association. Fini le spam, recevez uniquement les informations vérifiées et importantes.",
+      title: "Mensualités APE",
+      description: "Visualisez vos échéances, payez en un clic via Mobile Money et recevez automatiquement vos reçus de paiement.",
       badge: null,
     },
     {
       icon: Calendar,
-      title: "APE+ Agenda",
-      description: "Réunions parents-profs, fêtes de l'école, dates d'examens. Visualisez tout l'agenda et confirmez votre présence en un tap.",
+      title: "Agenda Scolaire",
+      description: "Réunions parents-profs, contrôles, événements... Tout le calendrier de la classe synchronisé avec votre téléphone.",
       badge: null,
     },
     {
       icon: Bell,
-      title: "Smart Notifications",
-      description: "Des alertes intelligentes directement sur votre téléphone. Intégration possible avec WhatsApp pour les urgences.",
+      title: "Alertes WhatsApp",
+      description: "Recevez les notifications urgentes directement sur WhatsApp : absences validées, annonces, rappels d'événements.",
       badge: null,
     },
   ];
 
   const steps = [
     {
-      icon: QrCode,
-      title: "Scannez",
-      description: "Utilisez le QR Code affiché à l'entrée de l'école ou sur le carnet de correspondance.",
+      icon: UserPlus,
+      title: "Créez votre compte",
+      description: "Inscrivez-vous gratuitement avec votre email. Ajoutez vos enfants et leur classe.",
     },
     {
-      icon: UserPlus,
-      title: "Inscrivez-vous",
-      description: "Créez votre profil famille en 2 minutes. Validation automatique par l'établissement.",
+      icon: School,
+      title: "Rejoignez l'école",
+      description: "Sélectionnez l'établissement de vos enfants. Accès automatique aux groupes de classe.",
     },
     {
       icon: Smartphone,
       title: "Gérez tout",
-      description: "Recevez les alertes, payez les cotisations et suivez vos enfants depuis l'application.",
+      description: "Absences, discussions, paiements : tout est centralisé dans une seule application.",
     },
   ];
 
   const testimonials = [
     {
-      name: "Sarah O.",
-      role: "Mère de 3 enfants",
-      content: "Avant, je ratais toujours les réunions à cause des messages perdus sur WhatsApp. Avec APE+, j'ai toutes les dates importantes directement sur mon téléphone. C'est un vrai soulagement.",
-      initials: "SO",
+      name: "Marie N.",
+      role: "Maman de Lucas, 6ème A",
+      content: "Mon fils était malade lundi. J'ai déclaré l'absence depuis l'app en 2 minutes, avec le certificat médical en photo. Validé le jour même par le censeur !",
+      initials: "MN",
     },
     {
       name: "Jean-Paul M.",
-      role: "Parent d'élève",
-      content: "La fonctionnalité 'Shop' est géniale. J'ai pu revendre les anciens uniformes de mon fils en 24h à d'autres parents du CES Mandela. L'économie solidaire en action !",
+      role: "Papa de 2 enfants",
+      content: "Le groupe de discussion de la classe est super pratique. Plus besoin de chercher dans 50 groupes WhatsApp. Les annonces des profs sont bien visibles.",
       initials: "JP",
     },
     {
       name: "Elodie K.",
       role: "Trésorière APE",
-      content: "La transparence de la caisse change tout. Payer la cotisation par Airtel Money et recevoir le reçu instantanément, c'est ce qu'on attendait depuis longtemps.",
+      content: "La boutique entre parents, c'est génial ! J'ai vendu les anciens manuels de ma fille en 24h à un parent de la même classe. Tout le monde y gagne.",
       initials: "EK",
     },
   ];
 
   const faqs = [
     {
-      question: "Comment fonctionne le système de notifications WhatsApp ?",
-      answer: "Après inscription et vérification de votre numéro, vous recevez automatiquement les alertes importantes : absences de vos enfants, rappels d'événements, messages de l'école. Aucune action requise de votre part.",
+      question: "Comment déclarer une absence ?",
+      answer: "Depuis votre tableau de bord, cliquez sur 'Vie Scolaire' puis 'Nouvelle absence'. Remplissez les dates, le motif et joignez un justificatif si nécessaire. L'établissement est notifié instantanément.",
     },
     {
-      question: "L'inscription est-elle gratuite ?",
-      answer: "Oui, l'inscription et l'utilisation de la plateforme sont entièrement gratuites pour les parents. Seules les transactions sur le marketplace sont à la charge des utilisateurs.",
+      question: "Qui peut voir mes messages dans les discussions ?",
+      answer: "Seuls les parents d'élèves de la même classe et les professeurs référents ont accès au groupe de discussion. Les messages sont modérés pour garantir un espace respectueux.",
     },
     {
-      question: "Comment fonctionne la Bourse solidaire ?",
-      answer: "Les parents peuvent faire don d'articles (manuels, uniformes, fournitures) pour les familles en difficulté. Les demandes sont traitées confidentiellement par le bureau APE.",
+      question: "Comment fonctionne la boutique ?",
+      answer: "Publiez une annonce avec photo et prix. Les autres parents de l'établissement peuvent vous contacter directement. La transaction se fait entre vous, APE Connect ne prend aucune commission.",
     },
     {
       question: "Mes données sont-elles sécurisées ?",
-      answer: "Absolument. Nous utilisons un chiffrement de bout en bout et respectons les normes RGPD. Vos données personnelles ne sont jamais partagées avec des tiers.",
+      answer: "Oui. Nous utilisons Supabase avec chiffrement SSL et authentification sécurisée. Vos données ne sont jamais partagées avec des tiers.",
     },
     {
-      question: "Quels établissements sont concernés ?",
-      answer: "APE Connect est disponible pour tous les établissements scolaires du Gabon. Si votre école n'est pas encore inscrite, contactez-nous pour l'ajouter.",
+      question: "L'application est-elle gratuite ?",
+      answer: "Oui, APE Connect est entièrement gratuit pour les parents. Aucun frais caché, aucun abonnement. Seules les mensualités APE de votre établissement restent à votre charge.",
     },
   ];
 
   const pricing = [
     {
-      name: "Gratuit",
+      name: "Parents",
       price: "0",
-      description: "Pour les parents d'élèves",
-      features: ["Suivi scolaire complet", "Notifications WhatsApp", "Accès au Shop", "Paiements Mobile Money"],
-      cta: "Commencer",
+      description: "Gratuit pour tous les parents",
+      features: ["Déclaration d'absences illimitée", "Discussions de classe", "Accès à la boutique", "Notifications WhatsApp", "Suivi des mensualités"],
+      cta: "Créer mon compte",
       popular: false,
     },
     {
-      name: "École",
+      name: "Établissement",
       price: "Sur devis",
-      description: "Pour les établissements",
-      features: ["Dashboard administration", "Gestion multi-classes", "Rapports et statistiques", "Support prioritaire", "Formation équipe"],
+      description: "Pour les écoles et lycées",
+      features: ["Dashboard administration", "Gestion multi-classes", "Validation des absences", "Annonces et communications", "Support prioritaire"],
       cta: "Nous contacter",
       popular: true,
     },
@@ -275,18 +273,18 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-zinc-200 shadow-sm mb-8 animate-fade-in">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-amber-500"></span>
-            <span className="text-sm font-medium text-zinc-600">L'app scolaire n°1 au Gabon</span>
+            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+            <span className="text-sm font-medium text-zinc-600">Application école-parents simplifiée</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-zinc-900 mb-6 max-w-4xl mx-auto leading-[1.1]">
-            L'école de vos enfants,
+            Absences, discussions, paiements :
             <br />
-            <span className="text-emerald-500">en toute transparence.</span>
+            <span className="text-emerald-500">tout en une seule app.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-zinc-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Connectez-vous à la vie scolaire : suivi des notes, cotisations APE sécurisées et communication directe avec l'établissement.
+            Déclarez les absences de vos enfants, échangez avec les autres parents de la classe et gérez vos mensualités APE depuis votre téléphone.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
@@ -345,10 +343,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 mb-4">
-              Fini les groupes WhatsApp surchargés
+              Les galères des parents, on connaît
             </h2>
             <p className="text-zinc-500 text-lg">
-              L'information scolaire ne devrait pas être un parcours du combattant. APE+ centralise ce qui compte vraiment.
+              Entre les justificatifs à fournir, les messages éparpillés et les paiements en espèces, la vie scolaire peut vite devenir un casse-tête.
             </p>
           </div>
 
@@ -382,10 +380,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 mb-4">
-              Tout l'écosystème scolaire,
-              <br />
-              dans votre poche.
+              Une app, trois modules essentiels
             </h2>
+            <p className="text-zinc-500 text-lg max-w-2xl">
+              Vie Scolaire, Discussions et Boutique : tout ce dont vous avez besoin pour suivre la scolarité de vos enfants.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -494,35 +493,35 @@ export default function HomePage() {
                     <div className="flex justify-between items-center mb-4">
                       <div>
                         <p className="text-xs text-zinc-400">Bonjour,</p>
-                        <h4 className="font-bold text-zinc-900">Mme. Ntoutoume</h4>
+                        <h4 className="font-bold text-zinc-900">Jean-Pierre D.</h4>
                       </div>
-                      <div className="h-8 w-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 text-xs font-bold">MN</div>
+                      <div className="h-8 w-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 text-xs font-bold">JP</div>
                     </div>
-                    <div className="bg-zinc-900 rounded-xl p-4 text-white mb-4">
-                      <p className="text-xs text-zinc-400 mb-1">Cotisation APE 2024</p>
+                    <div className="bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-xl p-4 text-white mb-4">
+                      <p className="text-xs text-white/70 mb-1">Prochaine Mensualité</p>
                       <div className="flex justify-between items-end">
-                        <span className="text-xl font-bold">15.000 FCFA</span>
-                        <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded">Payé</span>
+                        <span className="text-xl font-bold">1.000 FCFA</span>
+                        <span className="text-[10px] bg-white/20 text-white px-2 py-0.5 rounded">15 Fév</span>
                       </div>
                     </div>
                     <div className="grid grid-cols-4 gap-2 mb-4 text-center">
                       <div className="flex flex-col items-center gap-1">
                         <div className="h-10 w-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
-                          <BookOpen className="h-4 w-4" />
+                          <BarChart3 className="h-4 w-4" />
                         </div>
-                        <span className="text-[9px] text-zinc-500">Notes</span>
+                        <span className="text-[9px] text-zinc-500">Absences</span>
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <div className="h-10 w-10 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600">
-                          <Calendar className="h-4 w-4" />
+                          <Megaphone className="h-4 w-4" />
                         </div>
-                        <span className="text-[9px] text-zinc-500">Agenda</span>
+                        <span className="text-[9px] text-zinc-500">Discussions</span>
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <div className="h-10 w-10 bg-orange-50 rounded-lg flex items-center justify-center text-orange-600">
                           <ShoppingBag className="h-4 w-4" />
                         </div>
-                        <span className="text-[9px] text-zinc-500">Shop</span>
+                        <span className="text-[9px] text-zinc-500">Boutique</span>
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <div className="h-10 w-10 bg-red-50 rounded-lg flex items-center justify-center text-red-600">
@@ -534,23 +533,23 @@ export default function HomePage() {
                   </div>
                   {/* Notifications list mock */}
                   <div className="p-4 space-y-3">
-                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">RÉCENT</p>
+                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">ACTIVITÉ RÉCENTE</p>
                     <div className="bg-white p-3 rounded-xl shadow-sm border border-zinc-100 flex gap-3">
-                      <div className="h-8 w-8 bg-red-50 rounded-full flex-shrink-0 flex items-center justify-center text-red-500">
-                        <Bell className="h-4 w-4" />
+                      <div className="h-8 w-8 bg-green-50 rounded-full flex-shrink-0 flex items-center justify-center text-green-500">
+                        <CheckCircle2 className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-zinc-800">Réunion Parents-Profs</p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">Vendredi 12, 16h00 - Salle B2</p>
+                        <p className="text-xs font-semibold text-zinc-800">Absence validée</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">Lucas - 15 déc. • Approuvée</p>
                       </div>
                     </div>
                     <div className="bg-white p-3 rounded-xl shadow-sm border border-zinc-100 flex gap-3">
-                      <div className="h-8 w-8 bg-green-50 rounded-full flex-shrink-0 flex items-center justify-center text-green-500">
-                        <ShoppingBag className="h-4 w-4" />
+                      <div className="h-8 w-8 bg-purple-50 rounded-full flex-shrink-0 flex items-center justify-center text-purple-500">
+                        <Megaphone className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-zinc-800">Manuel Maths 6ème</p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">Vendu par M. Obiang - 2000 FCFA</p>
+                        <p className="text-xs font-semibold text-zinc-800">Groupe 6ème A</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">3 nouveaux messages</p>
                       </div>
                     </div>
                   </div>
@@ -700,10 +699,10 @@ export default function HomePage() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Rejoignez la communauté APE+
+            Prêt à simplifier votre vie de parent ?
           </h2>
           <p className="text-lg text-white/80 mb-10 max-w-2xl mx-auto">
-            Plus de 500 familles et 15 établissements utilisent déjà APE+ Connect pour une meilleure communication scolaire.
+            Créez votre compte gratuitement et accédez immédiatement aux fonctionnalités : déclaration d'absences, discussions de classe et boutique solidaire.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/register">
