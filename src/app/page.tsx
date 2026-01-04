@@ -313,7 +313,7 @@ export default function HomePage() {
           <div className="relative mx-auto max-w-5xl rounded-2xl md:rounded-3xl border-4 border-white bg-white shadow-2xl overflow-hidden">
             <div className="relative aspect-[16/9] md:aspect-[21/9] bg-zinc-100">
               <Image
-                src="https://images.unsplash.com/photo-1529390003868-6c01d73923f8?q=80&w=2574&auto=format&fit=crop"
+                src="/replicate-prediction-rg9vkwa6b9rmt0cvh6zbax5278.jpeg"
                 alt="Étudiants gabonais souriants"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-700"
