@@ -41,7 +41,7 @@ export function Header() {
     .toUpperCase() || user?.email?.[0]?.toUpperCase() || "U";
 
   return (
-    <header className="sticky top-0 z-20 flex h-20 items-center gap-4 bg-[#F9FAFB]/80 backdrop-blur-md px-4 sm:px-6">
+    <header className="sticky top-0 z-50 flex h-20 items-center gap-4 bg-[#F9FAFB]/95 backdrop-blur-md px-4 sm:px-6 border-b border-border/30">
       {/* Mobile Menu Trigger */}
       <div className="lg:hidden">
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -127,8 +127,21 @@ export function Header() {
         <span className="absolute right-3 top-3 h-2 w-2 rounded-full bg-accent-pink border-2 border-white" />
       </Button>
 
-      <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full bg-white shadow-sm hover:bg-white/90 hidden sm:flex">
-        <Settings className="h-5 w-5 text-foreground/70" />
+      <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full bg-white shadow-sm hover:bg-white/90 hidden sm:flex" asChild>
+        <Link href="/settings">
+          <Settings className="h-5 w-5 text-foreground/70" />
+        </Link>
+      </Button>
+
+      {/* Logout Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-11 w-11 rounded-full bg-white shadow-sm hover:bg-red-50 hover:text-red-600 hidden sm:flex"
+        onClick={() => signOut()}
+        title="Se déconnecter"
+      >
+        <LogOut className="h-5 w-5 text-foreground/70" />
       </Button>
 
       {/* User Menu */}
