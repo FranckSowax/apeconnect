@@ -30,28 +30,47 @@ export function useMessages({ groupeId, limit = 50 }: UseMessagesOptions) {
       }
       setLoading(true);
 
-      const { data, error: fetchError } = await supabase
+      // Fetch messages without automatic relations (FK points to auth.users, not public.users)
+      const { data: messagesData, error: fetchError } = await supabase
         .from("messages_discussion")
-        .select(`
-          *,
-          auteur:users!auteur_id(
-            id,
-            full_name,
-            avatar_url
-          ),
-          reply_message:messages_discussion!reply_to(
-            id,
-            contenu,
-            auteur:users!auteur_id(full_name)
-          )
-        `)
+        .select("*")
         .eq("groupe_id", groupeId)
         .order("created_at", { ascending: false })
         .range(offsetRef.current, offsetRef.current + limit - 1);
 
       if (fetchError) throw fetchError;
 
-      const newMessages = (data || []).reverse();
+      // Get unique author IDs (excluding nulls)
+      const authorIds = [...new Set(
+        (messagesData || [])
+          .map((m: { auteur_id: string | null }) => m.auteur_id)
+          .filter((id: string | null): id is string => id !== null)
+      )];
+
+      // Fetch author profiles separately
+      let authorsMap: Record<string, { id: string; full_name: string; avatar_url: string | null }> = {};
+      if (authorIds.length > 0) {
+        const { data: authorsData } = await supabase
+          .from("users")
+          .select("id, full_name, avatar_url")
+          .in("id", authorIds);
+
+        if (authorsData) {
+          authorsMap = authorsData.reduce((acc: typeof authorsMap, author: { id: string; full_name: string; avatar_url: string | null }) => {
+            acc[author.id] = author;
+            return acc;
+          }, {} as typeof authorsMap);
+        }
+      }
+
+      // Combine messages with author info
+      type MessageRow = { auteur_id: string | null; [key: string]: unknown };
+      const messagesWithAuthors = (messagesData || []).map((msg: MessageRow) => ({
+        ...msg,
+        auteur: msg.auteur_id ? authorsMap[msg.auteur_id] || null : null,
+      }));
+
+      const newMessages = messagesWithAuthors.reverse();
 
       if (reset) {
         setMessages(newMessages);
@@ -59,8 +78,8 @@ export function useMessages({ groupeId, limit = 50 }: UseMessagesOptions) {
         setMessages((prev) => [...newMessages, ...prev]);
       }
 
-      setHasMore((data?.length || 0) >= limit);
-      offsetRef.current += data?.length || 0;
+      setHasMore((messagesData?.length || 0) >= limit);
+      offsetRef.current += messagesData?.length || 0;
       setError(null);
     } catch (err) {
       console.error("Error fetching messages:", err);
@@ -118,25 +137,29 @@ export function useMessages({ groupeId, limit = 50 }: UseMessagesOptions) {
           filter: `groupe_id=eq.${groupeId}`,
         },
         async (payload: MessagePayload) => {
-          // Fetch the full message with relations
+          // Fetch the full message without automatic relations
           const newRecord = payload.new as { id: string };
           if (!newRecord?.id) return;
 
-          const { data } = await supabase
+          const { data: messageData } = await supabase
             .from("messages_discussion")
-            .select(`
-              *,
-              auteur:users!auteur_id(
-                id,
-                full_name,
-                avatar_url
-              )
-            `)
+            .select("*")
             .eq("id", newRecord.id)
             .single();
 
-          if (data) {
-            setMessages((prev) => [...prev, data]);
+          if (messageData) {
+            // Fetch author info separately
+            let auteur = null;
+            if (messageData.auteur_id) {
+              const { data: authorData } = await supabase
+                .from("users")
+                .select("id, full_name, avatar_url")
+                .eq("id", messageData.auteur_id)
+                .single();
+              auteur = authorData;
+            }
+
+            setMessages((prev) => [...prev, { ...messageData, auteur }]);
           }
         }
       )

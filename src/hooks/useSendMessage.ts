@@ -40,7 +40,7 @@ export function useSendMessage() {
       const auteurType: AuteurType = auteurTypeData || "PARENT";
 
       // Insérer le message
-      const { data, error: insertError } = await supabase
+      const { data: messageData, error: insertError } = await supabase
         .from("messages_discussion")
         .insert({
           groupe_id: groupeId,
@@ -51,17 +51,23 @@ export function useSendMessage() {
           is_annonce: isAnnonce,
           reply_to: replyTo || null,
         })
-        .select(`
-          *,
-          auteur:users!auteur_id(
-            id,
-            full_name,
-            avatar_url
-          )
-        `)
+        .select("*")
         .single();
 
       if (insertError) throw insertError;
+
+      // Fetch author info separately (FK points to auth.users, not public.users)
+      let auteur = null;
+      if (messageData?.auteur_id) {
+        const { data: authorData } = await supabase
+          .from("users")
+          .select("id, full_name, avatar_url")
+          .eq("id", messageData.auteur_id)
+          .single();
+        auteur = authorData;
+      }
+
+      const data = { ...messageData, auteur };
 
       return { data, error: null };
     } catch (err) {
