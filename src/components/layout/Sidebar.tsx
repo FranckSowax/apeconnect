@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   HelpCircle,
   Sparkles,
+  Users, // Children
 } from "lucide-react";
 
 interface NavItem {
@@ -32,6 +33,12 @@ const navItems: NavItem[] = [
     title: "Tableau de bord",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Mes Enfants",
+    href: "/children",
+    icon: Users,
+    roles: ["parent"],
   },
   {
     title: "Vie Scolaire", // Connect

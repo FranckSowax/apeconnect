@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { EstablishmentProvider } from "@/contexts/EstablishmentContext";
+import { StudentProvider } from "@/contexts/StudentContext";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -53,8 +54,10 @@ export default function RootLayout({
       <body className="antialiased bg-background text-foreground">
         <AuthProvider>
           <EstablishmentProvider>
-            {children}
-            <Toaster position="top-right" richColors />
+            <StudentProvider>
+              {children}
+              <Toaster position="top-right" richColors />
+            </StudentProvider>
           </EstablishmentProvider>
         </AuthProvider>
       </body>

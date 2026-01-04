@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEstablishment } from "@/contexts/EstablishmentContext";
+import { useStudents } from "@/contexts/StudentContext";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -21,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Bell, Search, User, Settings, LogOut, Menu } from "lucide-react";
+import { Bell, Search, User, Settings, LogOut, Menu, Users, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { SidebarContent } from "./Sidebar";
 
@@ -29,7 +30,9 @@ export function Header() {
   const { user, signOut, isSuperAdmin } = useAuth();
   const { currentEstablishment, establishments, setCurrentEstablishment } =
     useEstablishment();
+  const { students, currentStudent, setCurrentStudent } = useStudents();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isParent = user?.role === "parent";
 
   const initials = user?.full_name
     ?.split(" ")
@@ -67,6 +70,34 @@ export function Header() {
           />
         </div>
       </div>
+
+      {/* Student Selector (for parents with children) */}
+      {isParent && students.length > 0 && (
+        <Select
+          value={currentStudent?.id || ""}
+          onValueChange={(value) => {
+            const student = students.find((s) => s.id === value);
+            if (student) setCurrentStudent(student);
+          }}
+        >
+          <SelectTrigger className="w-[180px] rounded-full border-none bg-white shadow-sm h-11">
+            <Users className="h-4 w-4 mr-2 text-primary" />
+            <SelectValue placeholder="Sélectionner un enfant" />
+          </SelectTrigger>
+          <SelectContent>
+            {students.map((student) => (
+              <SelectItem key={student.id} value={student.id}>
+                <div className="flex flex-col items-start">
+                  <span>{student.full_name}</span>
+                  {student.class_name && (
+                    <span className="text-xs text-muted-foreground">{student.class_name}</span>
+                  )}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
 
       {/* Establishment Selector (for super_admin) */}
       {isSuperAdmin && establishments.length > 0 && (

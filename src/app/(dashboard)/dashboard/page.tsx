@@ -2,8 +2,8 @@
 
 export const dynamic = "force-dynamic";
 
-import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useStudents } from "@/contexts/StudentContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -107,9 +107,75 @@ const recentActivities = [
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { currentStudent, students } = useStudents();
+  const isParent = user?.role === "parent";
 
   return (
     <div className="space-y-6 pb-8">
+      {/* Selected Child Banner (for parents) */}
+      {isParent && currentStudent && (
+        <Card className="border-0 shadow-sm rounded-[24px] bg-gradient-to-r from-[#062F28] to-[#0a4a3f] text-white overflow-hidden">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                <Users className="h-7 w-7 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <h2 className="text-xl font-bold truncate">{currentStudent.full_name}</h2>
+                  {students.length > 1 && (
+                    <Badge className="bg-white/20 text-white border-0 text-xs">
+                      {students.length} enfants
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-3 text-white/80 text-sm">
+                  {currentStudent.class_name && (
+                    <span className="flex items-center gap-1">
+                      <FileText className="h-4 w-4" />
+                      {currentStudent.class_name}
+                    </span>
+                  )}
+                  {currentStudent.level && (
+                    <span className="flex items-center gap-1">
+                      <TrendingUp className="h-4 w-4" />
+                      {currentStudent.level}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <Link href="/children" className="flex-shrink-0">
+                <Button className="bg-white/20 hover:bg-white/30 text-white border-0 rounded-full">
+                  Gérer les enfants
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* No child prompt (for parents without children) */}
+      {isParent && students.length === 0 && (
+        <Card className="border-2 border-dashed border-primary/30 rounded-[24px] bg-primary/5">
+          <CardContent className="p-6 text-center">
+            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Users className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-bold text-foreground mb-2">Ajoutez vos enfants</h3>
+            <p className="text-muted-foreground mb-4">
+              Pour profiter de toutes les fonctionnalités, commencez par ajouter vos enfants.
+            </p>
+            <Link href="/children">
+              <Button className="rounded-full">
+                <Plus className="mr-2 h-4 w-4" />
+                Ajouter un enfant
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Top Section */}
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {/* Wallet / Balance Card - GREEN CARD */}
