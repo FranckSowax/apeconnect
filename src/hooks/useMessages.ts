@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import type { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import type { MessageDiscussion } from "@/types";
+
+type MessagePayload = RealtimePostgresChangesPayload<{
+  [key: string]: unknown;
+}>;
 
 interface UseMessagesOptions {
   groupeId: string;
@@ -112,8 +117,11 @@ export function useMessages({ groupeId, limit = 50 }: UseMessagesOptions) {
           table: "messages_discussion",
           filter: `groupe_id=eq.${groupeId}`,
         },
-        async (payload) => {
+        async (payload: MessagePayload) => {
           // Fetch the full message with relations
+          const newRecord = payload.new as { id: string };
+          if (!newRecord?.id) return;
+
           const { data } = await supabase
             .from("messages_discussion")
             .select(`
@@ -124,7 +132,7 @@ export function useMessages({ groupeId, limit = 50 }: UseMessagesOptions) {
                 avatar_url
               )
             `)
-            .eq("id", payload.new.id)
+            .eq("id", newRecord.id)
             .single();
 
           if (data) {
@@ -140,10 +148,13 @@ export function useMessages({ groupeId, limit = 50 }: UseMessagesOptions) {
           table: "messages_discussion",
           filter: `groupe_id=eq.${groupeId}`,
         },
-        (payload) => {
+        (payload: MessagePayload) => {
+          const updatedRecord = payload.new as { id: string; [key: string]: unknown };
+          if (!updatedRecord?.id) return;
+
           setMessages((prev) =>
             prev.map((msg) =>
-              msg.id === payload.new.id ? { ...msg, ...payload.new } : msg
+              msg.id === updatedRecord.id ? { ...msg, ...updatedRecord } : msg
             )
           );
         }
@@ -156,8 +167,11 @@ export function useMessages({ groupeId, limit = 50 }: UseMessagesOptions) {
           table: "messages_discussion",
           filter: `groupe_id=eq.${groupeId}`,
         },
-        (payload) => {
-          setMessages((prev) => prev.filter((msg) => msg.id !== payload.old.id));
+        (payload: MessagePayload) => {
+          const deletedRecord = payload.old as { id: string };
+          if (!deletedRecord?.id) return;
+
+          setMessages((prev) => prev.filter((msg) => msg.id !== deletedRecord.id));
         }
       )
       .subscribe();

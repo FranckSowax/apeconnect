@@ -93,19 +93,18 @@ BEGIN
   -- METTRE À JOUR LES ÉTUDIANTS EXISTANTS AVEC DES CLASSES
   -- ===========================================
 
-  -- Assigner les étudiants existants aux classes
+  -- Assigner les étudiants existants aux classes (un seul par parent pour le test)
   UPDATE students
   SET classe_id = v_classe_6a_id
-  WHERE parent_id = v_parent1_id AND classe_id IS NULL
-  LIMIT 1;
+  WHERE id = (SELECT id FROM students WHERE parent_id = v_parent1_id AND classe_id IS NULL LIMIT 1);
 
   UPDATE students
   SET classe_id = v_classe_6b_id
-  WHERE parent_id = v_parent2_id AND classe_id IS NULL;
+  WHERE id = (SELECT id FROM students WHERE parent_id = v_parent2_id AND classe_id IS NULL LIMIT 1);
 
   UPDATE students
   SET classe_id = v_classe_3b_id
-  WHERE parent_id = v_parent3_id AND classe_id IS NULL;
+  WHERE id = (SELECT id FROM students WHERE parent_id = v_parent3_id AND classe_id IS NULL LIMIT 1);
 
   -- ===========================================
   -- CRÉER DES MESSAGES DE TEST

@@ -23,7 +23,7 @@ export function MessagesList({
   onLoadMore,
   onReply,
 }: MessagesListProps) {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
   const { deleteMessage, editMessage } = useSendMessage();
@@ -72,7 +72,7 @@ export function MessagesList({
   };
 
   const canDeleteMessage = (message: MessageDiscussion) => {
-    return message.auteur_id === user?.id || user?.is_admin_ape;
+    return message.auteur_id === user?.id || isAdmin;
   };
 
   const handleDelete = async (messageId: string) => {
