@@ -16,13 +16,19 @@ export default function DashboardLayout({
   const { user, loading } = useAuth();
   const router = useRouter();
 
+  // Debug logs
+  console.log("[DASHBOARD] Render - loading:", loading, "user:", user?.email || "null");
+
   useEffect(() => {
+    console.log("[DASHBOARD] useEffect - loading:", loading, "user:", user?.email || "null");
     if (!loading && !user) {
+      console.log("[DASHBOARD] No user and not loading, redirecting to login");
       router.push("/login");
     }
   }, [user, loading, router]);
 
   if (loading) {
+    console.log("[DASHBOARD] Showing spinner because loading is true");
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -31,8 +37,11 @@ export default function DashboardLayout({
   }
 
   if (!user) {
+    console.log("[DASHBOARD] No user, returning null (waiting for redirect)");
     return null;
   }
+
+  console.log("[DASHBOARD] Rendering dashboard for user:", user.email);
 
   return (
     <div className="min-h-screen flex bg-background">
