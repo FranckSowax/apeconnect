@@ -50,8 +50,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user?.id]);
 
   const fetchUserProfile = useCallback(async (supabaseUser: SupabaseUser): Promise<User> => {
-    console.log("[AUTH] fetchUserProfile called for user:", supabaseUser.id);
-
     // Create fallback user from metadata
     const fallbackUser: User = {
       id: supabaseUser.id,
@@ -67,8 +65,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     try {
-      console.log("[AUTH] Fetching user profile from database...");
-
       // Add timeout to prevent infinite hang
       const timeoutPromise = new Promise<null>((_, reject) =>
         setTimeout(() => reject(new Error("Profile fetch timeout")), 5000)
@@ -86,23 +82,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await Promise.race([fetchPromise, timeoutPromise]);
 
       if (!result) {
-        console.warn("[AUTH] Profile fetch timed out, using fallback");
         return fallbackUser;
       }
 
       const { data, error } = result;
 
       if (error) {
-        console.error("[AUTH] Error fetching user profile:", error);
-        console.log("[AUTH] Returning fallback user data");
+        console.error("Error fetching user profile:", error);
         return fallbackUser;
       }
 
-      console.log("[AUTH] User profile fetched successfully:", data);
       return data as User;
     } catch (err) {
-      console.error("[AUTH] Unexpected error fetching profile:", err);
-      console.log("[AUTH] Returning fallback user data due to exception");
+      console.error("Unexpected error fetching profile:", err);
       return fallbackUser;
     }
   }, [supabase]);
@@ -114,102 +106,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [session, fetchUserProfile]);
 
   useEffect(() => {
-    console.log("[AUTH] useEffect triggered, initializedRef:", initializedRef.current);
-
     // Prevent re-initialization using ref (survives re-renders)
-    if (initializedRef.current) {
-      console.log("[AUTH] Already initialized, skipping");
-      return;
-    }
+    if (initializedRef.current) return;
     initializedRef.current = true;
-    console.log("[AUTH] Starting initialization...");
 
     let mounted = true;
 
     const initializeAuth = async () => {
-      console.log("[AUTH] initializeAuth called");
       try {
-        console.log("[AUTH] Calling supabase.auth.getSession()...");
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-        console.log("[AUTH] getSession result - session:", initialSession ? "exists" : "null", "error:", error);
 
         if (error) {
-          console.error("[AUTH] Error getting session:", error);
-          if (mounted) {
-            console.log("[AUTH] Setting loading to false (error path)");
-            setLoading(false);
-          }
+          console.error("Error getting session:", error);
+          if (mounted) setLoading(false);
           return;
         }
 
         if (mounted) {
-          console.log("[AUTH] Setting session:", initialSession ? initialSession.user?.email : "null");
           setSession(initialSession);
           if (initialSession?.user) {
-            console.log("[AUTH] Session has user, fetching profile...");
             const profile = await fetchUserProfile(initialSession.user);
-            if (mounted) {
-              console.log("[AUTH] Setting user profile:", profile?.email);
-              setUser(profile);
-            }
-          } else {
-            console.log("[AUTH] No user in session");
+            if (mounted) setUser(profile);
           }
-          console.log("[AUTH] Setting loading to false (success path)");
           setLoading(false);
         }
       } catch (error) {
-        console.error("[AUTH] Auth initialization error:", error);
-        if (mounted) {
-          console.log("[AUTH] Setting loading to false (catch path)");
-          setLoading(false);
-        }
+        console.error("Auth initialization error:", error);
+        if (mounted) setLoading(false);
       }
     };
 
     initializeAuth();
 
     // Listen for auth state changes
-    console.log("[AUTH] Setting up onAuthStateChange listener");
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, newSession: Session | null) => {
-        console.log("[AUTH] onAuthStateChange fired - event:", event, "mounted:", mounted);
-        if (!mounted) {
-          console.log("[AUTH] Component unmounted, ignoring event");
-          return;
-        }
+        if (!mounted) return;
 
         // Skip INITIAL_SESSION as we handle it above
-        if (event === 'INITIAL_SESSION') {
-          console.log("[AUTH] Skipping INITIAL_SESSION event");
-          return;
-        }
+        if (event === 'INITIAL_SESSION') return;
 
-        console.log("[AUTH] Processing auth state change:", event);
         setSession(newSession);
 
         if (newSession?.user) {
-          console.log("[AUTH] New session has user:", newSession.user.email);
           // Only fetch profile if user changed or on sign in
           if (event === 'SIGNED_IN' || userIdRef.current !== newSession.user.id) {
-            console.log("[AUTH] Fetching profile for new/changed user");
             const profile = await fetchUserProfile(newSession.user);
             if (mounted) setUser(profile);
-          } else {
-            console.log("[AUTH] User unchanged, skipping profile fetch");
           }
         } else {
-          console.log("[AUTH] No user in new session, clearing user");
           setUser(null);
         }
 
-        console.log("[AUTH] Setting loading to false (auth state change)");
         setLoading(false);
       }
     );
 
     return () => {
-      console.log("[AUTH] Cleanup - unmounting");
       mounted = false;
       subscription.unsubscribe();
     };
